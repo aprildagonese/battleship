@@ -28,8 +28,11 @@ class Cell
     end
   end
 
-  def render
-    if !fired_upon?
+  #Revisit to make easier to read/better flow
+  def render(show_ship = false)
+    if !fired_upon? && !empty? && show_ship
+      "S"
+    elsif !fired_upon? && empty?
       "."
     elsif empty?
       "M"
@@ -39,5 +42,5 @@ class Cell
       "H"
     end
   end
-  
+
 end
