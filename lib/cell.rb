@@ -1,10 +1,11 @@
 class Cell
-  attr_reader :coordinate, :ship
+  attr_reader :coordinate, :ship, :fired_upon
 
   def initialize(coordinate)
     @coordinate = coordinate
     #When place_ship method is called, call.ship will contian ship.
     @ship = nil
+    @fired_upon = false
   end
 
   def empty?
@@ -17,11 +18,14 @@ class Cell
 
   #Not sure what is suppoed to happen in here:
   def fired_upon?
-    true
+    @fired_upon
   end
 
   def fire_upon
-    @ship.hit
+    @fired_upon = true
+    if !@ship.nil?
+      @ship.hit
+    end
   end
 
 end
