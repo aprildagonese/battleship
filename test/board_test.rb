@@ -20,7 +20,8 @@ class BoardTest < Minitest::Test
 
   def test_calculate_character
     board = Board.new(4, 4)
-    assert_equal "C", Board.calculate_height_char
+    assert_equal ["A", "B", "C", "D"], board.rows_array
+  end
 
   def test_board_creation
     board = Board.new(4, 4)
