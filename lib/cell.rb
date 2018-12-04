@@ -28,4 +28,16 @@ class Cell
     end
   end
 
+  def render
+    if !fired_upon?
+      "."
+    elsif empty?
+      "M"
+    elsif @ship.sunk?
+      "X"
+    else
+      "H"
+    end
+  end
+  
 end
