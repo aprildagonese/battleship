@@ -12,7 +12,7 @@ class TestCell < Minitest::Test
 
   def test_retrieve_coordinate
     cell = Cell.new("B4")
-    assert_equal "B4", cell.coordinate
+    assert_equal "B4", cell.cell
   end
 
   def test_empty_at_initialization
@@ -33,5 +33,21 @@ class TestCell < Minitest::Test
     cell.place_ship(cruiser)
     assert_equal false, cell.empty?
   end
+
+  def test_not_fired_upon_at_initialize
+    cell = Cell.new("B4")
+    cruiser = Ship.new("Cruiser", 3)
+    cell.place_ship(cruiser)
+    assert_equal false, cell.fired_upon?
+  end
+
+  def test_fired_upon_after_hit
+    cell = Cell.new("B4")
+    cruiser = Ship.new("Cruiser", 3)
+    cell.place_ship(cruiser)
+    cell.fire_upon
+    assert_equal true, cell.fired_upon?
+  end
+
 
 end

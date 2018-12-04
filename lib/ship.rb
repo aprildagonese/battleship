@@ -1,5 +1,5 @@
 class Ship
-  attr_reader :name, :length
+  attr_reader :name, :length, :hits
 
   def initialize(name, length)
     @name = name
@@ -18,6 +18,7 @@ class Ship
   def hit
     @hits +=1
   end
+
 
 
 
