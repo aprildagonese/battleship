@@ -3,7 +3,8 @@ require './lib/cell'
 
 class Board
 
-  def initialize(width, height)
+
+  def initialize(width = 4, height = 4)
     @width = width #width is for numbers
     @height = height #height is for letters
     # @cells = {}
@@ -11,10 +12,10 @@ class Board
 
   def rows_array
     end_letter = (@height + 64).chr
-    rows_array = ("A"..((@height + 64).chr).to_a
-  end
+    rows_array = ("A"..end_letter).to_a
+  end #can separate into two methods later
 
-  def cells
+  def cells #mentor says to return to this for refactoring
     some_other_hash = {}
 
     numbers_array = (1..@width).to_a
@@ -24,7 +25,7 @@ class Board
         some_other_hash[temp_key] = Cell.new(temp_key)
       end
     end
-    return some_other_hash
+    some_other_hash
   end
 
 end
