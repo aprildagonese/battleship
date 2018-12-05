@@ -3,8 +3,7 @@ require './lib/cell'
 
 class Board
 
-
-  def initialize(width = 4, height = 4)
+  def initialize(height = 4, width = 4)
     @width = width #width is for numbers
     @height = height #height is for letters
     # @cells = {}
@@ -25,6 +24,14 @@ class Board
       end
     end
     return cells_hash
+  end
+
+  def valid_coordinate?(coordinate)
+    cells.member?(coordinate)
+  end
+
+  def valid_placement?(ship, coordinates)
+    
   end
 
 end

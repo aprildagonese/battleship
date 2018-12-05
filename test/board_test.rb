@@ -24,22 +24,34 @@ class BoardTest < Minitest::Test
     assert_equal ["A", "B", "C", "D"], @board.rows_array
   end
 
-  def test_board_creation
-    assert_equal true, @board.cells.member?("D4")
+  def test_valid_coordinate_default_board
+    assert_equal true, @board.valid_coordinate?("A1")
+    assert_equal true, @board.valid_coordinate?("D4")
+    assert_equal false, @board.valid_coordinate?("A5")
+    assert_equal false, @board.valid_coordinate?("E1")
+    assert_equal false, @board.valid_coordinate?("A22")
   end
 
-  def test_sad_path_board_creation
-    skip
-    #maybe we don't let the user make a @board past Z?
-
+  def test_valid_coordinate_custom_board
+    board2 = Board.new(6, 7)
+    assert_equal true, board2.valid_coordinate?("A1")
+    assert_equal true, board2.valid_coordinate?("E5")
+    assert_equal false, board2.valid_coordinate?("L2")
+    assert_equal false, board2.valid_coordinate?("E8")
+    assert_equal false, board2.valid_coordinate?("Z77")
   end
 
-  def test_when_cell_is_valid
-    skip
-  end
+  def test_valid_placement
+    cruiser = Ship.new("Cruiser", 3)
+    submarine = Ship.new("Submarine", 2)
 
-  def test_when_cell_is_invalid
-    skip
+    assert_equal false, @board.valid_placement?(cruiser,["A1", "A2"])
+    assert_equal false, @board.valid_placement?(submarine,["A2", "A3", "A4"])
+    assert_equal false, @board.valid_placement?(cruiser,["A1", "A2", "A4"])
+    assert_equal false, @board.valid_placement?(submarine,["A1", "C1"])
+    assert_equal false, @board.valid_placement?(cruiser,["A3", "A2", "A1"])
+    assert_equal false, @board.valid_placement?(submarine,["C1", "B1"])
+  
   end
 
 end
