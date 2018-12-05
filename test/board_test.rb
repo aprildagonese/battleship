@@ -8,6 +8,8 @@ class BoardTest < Minitest::Test
 
   def setup
     @board = Board.new
+    @cruiser = Ship.new("Cruiser", 3)
+    @submarine = Ship.new("Submarine", 2)
   end
 
   def test_board_exists
@@ -42,12 +44,15 @@ class BoardTest < Minitest::Test
   end
 
   def test_invalid_placement_not_correct_length
-    cruiser = Ship.new("Cruiser", 3)
-    submarine = Ship.new("Submarine", 2)
-
-    assert_equal false, @board.valid_placement?(cruiser,["A1", "A2"])
-    assert_equal false, @board.valid_placement?(submarine,["A2", "A3", "A4"])
+    assert_equal false, @board.valid_placement?(@cruiser,["A1", "A2"])
+    assert_equal false, @board.valid_placement?(@submarine,["A2", "A3", "A4"])
   end
+
+  # def test_split_coords
+  #   assert_equal []@board.split_coords(["A1", "A2", "A3"]).coord_letters
+  #
+  # end
+
 
   def test_invalid_placement_not_consecutive
     cruiser = Ship.new("Cruiser", 3)
