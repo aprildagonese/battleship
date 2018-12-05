@@ -3,7 +3,8 @@ require './lib/cell'
 
 class Board
 
-  def initialize(width, height)
+
+  def initialize(width = 4, height = 4)
     @width = width #width is for numbers
     @height = height #height is for letters
     # @cells = {}
@@ -12,9 +13,9 @@ class Board
   def rows_array
     end_letter = (@height + 64).chr
     ("A"..end_letter).to_a
-  end
+  end #refactor this later
 
-  def cells
+  def cells #refactor this later
     cells_hash = {}
     numbers_array = (1..@width).to_a
     rows_array.each do |letter|
