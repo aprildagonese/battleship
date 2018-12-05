@@ -6,7 +6,8 @@ class Board
   def initialize(height = 4, width = 4)
     @width = width #width is for numbers
     @height = height #height is for letters
-    # @cells = {}
+    @coord_numbers = []
+    @coord_letters = []
   end
 
   def rows_array
@@ -31,7 +32,38 @@ class Board
   end
 
   def valid_placement?(ship, coordinates)
-    
+    if valid_size?(ship, coordinates)
+      true
+    elsif matching?(@coord_letters) && !matching?(@coord_numbers) && consecutive?(@coord_numbers)
+      true
+    elsif !matching?(@coord_letters) && matching?(@coord_numbers) && consecutive?(@coord_letters)
+      true
+    else
+      false
+    end
+  end
+
+  def valid_size?(ship, coordinates)
+    ship.length == coordinates.count
+  end
+
+  def split_coords(coordinates)
+    @coord_letters = coordinates.map do |coordinate|
+      coordinate[0]
+    end
+    @coord_numbers = coordinates.map do |coordinate|
+      coordinate[1]
+    end
+  end
+
+  def matching?(coord_array)
+    coord_array.uniq.count == 1
+  end
+
+  def consecutive?(coord_array)
+    coord_array.sort.each_cons(2).all? do |a, b|
+      b == a + 1
+    end
   end
 
 end

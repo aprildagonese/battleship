@@ -59,6 +59,7 @@ class BoardTest < Minitest::Test
   end
 
   def test_invalid_placement_diagonal
+    skip
     cruiser = Ship.new("Cruiser", 3)
     submarine = Ship.new("Submarine", 2)
     assert_equal false, @board.valid_placement?(cruiser,["A1", "B2", "C3"])
@@ -66,6 +67,7 @@ class BoardTest < Minitest::Test
   end
 
   def test_valid_placement
+    skip
     cruiser = Ship.new("Cruiser", 3)
     submarine = Ship.new("Submarine", 2)
 
