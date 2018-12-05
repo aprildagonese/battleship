@@ -12,20 +12,19 @@ class Board
 
   def rows_array
     end_letter = (@height + 64).chr
-    rows_array = ("A"..end_letter).to_a
-  end #can separate into two methods later
+    ("A"..end_letter).to_a
+  end #refactor this later
 
-  def cells #mentor says to return to this for refactoring
-    some_other_hash = {}
-
+  def cells #refactor this later
+    cells_hash = {}
     numbers_array = (1..@width).to_a
     rows_array.each do |letter|
       numbers_array.each do |number|
         temp_key = "#{letter}#{number.to_s}"
-        some_other_hash[temp_key] = Cell.new(temp_key)
+        cells_hash[temp_key] = Cell.new(temp_key)
       end
     end
-    some_other_hash
+    return cells_hash
   end
 
 end
