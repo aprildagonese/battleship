@@ -1,4 +1,5 @@
 require './lib/cell'
+require './lib/valid_placement'
 
 class Board
 
@@ -26,6 +27,11 @@ class Board
 
   def valid_coordinate?(coordinate)
     cells.member?(coordinate)
+  end
+
+  def valid_placement?(ship, coordinates)
+    placement = ValidPlacement.new(ship, coordinates)
+    placement.valid_placement?(ship, coordinates)
   end
 
 end
