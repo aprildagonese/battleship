@@ -134,20 +134,25 @@ class BoardTest < Minitest::Test
   def test_it_can_render_a_board
     @board.place(@cruiser, ["A1", "A2", "A3"])
 
-    assert_equal " 1 2 3 4 \nA . . . . \nB . . . . \nC . . . . \nD . . . . \n", @board.render
-    assert_equal " 1 2 3 4 \nA S S S . \nB . . . . \nC . . . . \nD . . . . \n", @board.render(true)
+    assert_equal "  1 2 3 4 \nA . . . . \nB . . . . \nC . . . . \nD . . . . \n", @board.render
+    assert_equal "  1 2 3 4 \nA S S S . \nB . . . . \nC . . . . \nD . . . . \n", @board.render(true)
+
+    @board.place(@submarine, ["B4", "C4"])
+    assert_equal "  1 2 3 4 \nA S S S . \nB . . . S \nC . . . S \nD . . . . \n", @board.render(true)
+
+    hit_cell = @board.cells["B4"]
+    hit_cell.fire_upon
+    miss_cell = @board.cells["B3"]
+    miss_cell.fire_upon
+    @board.place(@submarine, ["B4", "C4"])
+    assert_equal "  1 2 3 4 \nA S S S . \nB . . M H \nC . . . S \nD . . . . \n", @board.render(true)
+
+    hit_cell = @board.cells["C4"]
+    hit_cell.fire_upon
+    assert_equal "  1 2 3 4 \nA S S S . \nB . . M X \nC . . . X \nD . . . . \n", @board.render(true)
+
+    puts "\n"
+    puts @board.render(true)
   end
-  # def test_valid_placement_components
-  #   ship = Ship.new("Submarine", 3)
-  #   coordinates = ["A1", "A2", "A3"]
-  #   assert_equal true, @board.valid_size?(ship, coordinates)
-  #   assert_equal true, @board.matching?(@board.split_letters(coordinates)) && !@board.matching?(@board.split_numbers(coordinates)) && @board.consecutive?(@board.split_numbers(coordinates))
-  #
-  #   # assert_equal true, !@board.matching?(@board.split_letters(coordinates)) && @board.matching?(@board.split_numbers(coordinates)) && @board.consecutive?(@board.split_letters(coordinates))
-  #
-  #   assert_equal true, !@board.matching?(@board.split_letters(coordinates))
-  #   assert_equal true, @board.matching?(@board.split_numbers(coordinates))
-  #   assert_equal true, @board.consecutive?(@board.split_letters(coordinates))
-  # end
 
 end

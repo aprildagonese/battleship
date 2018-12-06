@@ -63,7 +63,7 @@ class Board
   def render_array(show_ship)
     render_array = []
 
-    #render_array << " "
+    render_array << " "
     numbers_array.each do |number|
       render_array << " " + number.to_s
     end
