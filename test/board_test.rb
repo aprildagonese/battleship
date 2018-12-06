@@ -17,14 +17,16 @@ class BoardTest < Minitest::Test
     assert_instance_of Board, @board
   end
 
-  def test_cells
+  def test_cells_hash
     assert_equal Hash, @board.cells.class
     assert_equal 16, @board.cells.length
     assert_instance_of Cell, @board.cells["A1"]
   end
 
-  def test_calculate_character
-    assert_equal ["A", "B", "C", "D"], @board.rows_array
+  def test_array_of_letters
+    board2 = Board.new(6, 7)
+    assert_equal ["A", "B", "C", "D"], @board.letters_array
+    assert_equal ["A", "B", "C", "D", "E", "F"], board2.letters_array
   end
 
   def test_valid_coordinate_default_board
@@ -43,6 +45,114 @@ class BoardTest < Minitest::Test
     assert_equal false, board2.valid_coordinate?("E8")
     assert_equal false, board2.valid_coordinate?("Z77")
   end
+  #
+  # def test_valid_size
+  #   assert_equal false, @board.valid_size?(@cruiser,["A1", "A2"])
+  #   assert_equal false, @board.valid_size?(@submarine,["A2", "A3", "A4"])
+  #   assert_equal true, @board.valid_size?(@submarine,["A2", "A3"])
+  # end
+  # #
+  # def test_split_letters
+  #   test_array = ["A2", "B2", "C2", "D2"]
+  #   assert_equal ["A", "B", "C", "D"], @board.split_letters(test_array)
+  # end
+  #
+  # def test_split_numbers
+  #   test_array = ["A3", "A1", "A2", "A4"]
+  #   assert_equal [3, 1, 2, 4], @board.split_numbers(test_array)
+  # end
+  #
+  # def test_matching_letters
+  #   test_array1 = ["A3", "A1", "A2", "A4"]
+  #   test_letters1 = @board.split_letters(test_array1)
+  #   assert_equal true, @board.matching?(test_letters1)
+  #   test_array2 = ["A2", "A2", "C2", "D2"]
+  #   test_letters2 = @board.split_letters(test_array2)
+  #   assert_equal false, @board.matching?(test_letters2)
+  # end
+  #
+  # def test_matching_numbers
+  #   test_array1 = ["A3", "A1", "A2", "A4"]
+  #   test_numbers1 = @board.split_numbers(test_array1)
+  #   assert_equal false, @board.matching?(test_numbers1)
+  #   test_array2 = ["A2", "A2", "C2", "D2"]
+  #   test_numbers2 = @board.split_numbers(test_array2)
+  #   assert_equal true, @board.matching?(test_numbers2)
+  # end
+  #
+  # def test_consecutive
+  #   test_array1 = ["A1", "A2", "A3", "A4"]
+  #   test_numbers1 = @board.split_numbers(test_array1)
+  #   assert_equal true, @board.consecutive?(test_numbers1)
+  #   test_array2 = ["A3", "A1", "A2", "A4"]
+  #   test_numbers2 = @board.split_numbers(test_array2)
+  #   assert_equal true, @board.consecutive?(test_numbers2)
+  #   test_array3 = ["A2", "B2", "C2", "D2"]
+  #   test_numbers3 = @board.split_numbers(test_array3)
+  #   assert_equal false, @board.consecutive?(test_numbers3)
+  # end
 
+  def test_invalid_placement_not_correct_length
+    assert_equal false, @board.valid_placement?(@cruiser,["A1", "A2"])
+    assert_equal false, @board.valid_placement?(@submarine,["A2", "A3", "A4"])
+  end
+
+  def test_invalid_placement_not_consecutive
+    assert_equal false, @board.valid_placement?(@cruiser,["A1", "A2", "A4"])
+    assert_equal false, @board.valid_placement?(@submarine,["A1", "C1"])
+  end
+
+  def test_invalid_placement_diagonal
+    assert_equal false, @board.valid_placement?(@cruiser,["A1", "B2", "C3"])
+    assert_equal false, @board.valid_placement?(@submarine,["C2", "D3"])
+  end
+
+  def test_valid_placement
+    assert_equal true, @board.valid_placement?(@submarine,["A1", "A2"])
+    assert_equal true, @board.valid_placement?(@cruiser,["B1", "C1", "D1"])
+    assert_equal true, @board.valid_placement?(@cruiser,["D1", "B1", "C1"])
+  end
+
+  def test_it_can_place_a_ship
+    @board.place(@cruiser, ["A1", "A2", "A3"])
+    cell_1 = @board.cells["A1"]
+    cell_2 = @board.cells["A2"]
+    cell_3 = @board.cells["A3"]
+
+    assert_equal @cruiser, cell_1.ship
+    assert_equal @cruiser, cell_2.ship
+    assert_equal @cruiser, cell_3.ship
+    assert_equal true, cell_3.ship == cell_2.ship
+  end
+
+  def test_it_doesnt_have_overlapping_ships
+    @board.place(@cruiser, ["A1", "A2", "A3"])
+
+    assert_equal false, @board.valid_placement?(@submarine, ["A1", "B1"])
+  end
+
+  def test_it_can_render_a_board
+    @board.place(@cruiser, ["A1", "A2", "A3"])
+
+    assert_equal "  1 2 3 4 \nA . . . . \nB . . . . \nC . . . . \nD . . . . \n", @board.render
+    assert_equal "  1 2 3 4 \nA S S S . \nB . . . . \nC . . . . \nD . . . . \n", @board.render(true)
+
+    @board.place(@submarine, ["B4", "C4"])
+    assert_equal "  1 2 3 4 \nA S S S . \nB . . . S \nC . . . S \nD . . . . \n", @board.render(true)
+
+    hit_cell = @board.cells["B4"]
+    hit_cell.fire_upon
+    miss_cell = @board.cells["B3"]
+    miss_cell.fire_upon
+    @board.place(@submarine, ["B4", "C4"])
+    assert_equal "  1 2 3 4 \nA S S S . \nB . . M H \nC . . . S \nD . . . . \n", @board.render(true)
+
+    hit_cell = @board.cells["C4"]
+    hit_cell.fire_upon
+    assert_equal "  1 2 3 4 \nA S S S . \nB . . M X \nC . . . X \nD . . . . \n", @board.render(true)
+
+    puts "\n"
+    puts @board.render(true)
+  end
 
 end
