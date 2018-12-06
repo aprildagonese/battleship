@@ -25,8 +25,8 @@ class BoardTest < Minitest::Test
 
   def test_array_of_letters
     board2 = Board.new(6, 7)
-    assert_equal ["A", "B", "C", "D"], @board.rows_array
-    assert_equal ["A", "B", "C", "D", "E", "F"], board2.rows_array
+    assert_equal ["A", "B", "C", "D"], @board.letters_array
+    assert_equal ["A", "B", "C", "D", "E", "F"], board2.letters_array
   end
 
   def test_valid_coordinate_default_board
@@ -118,13 +118,25 @@ class BoardTest < Minitest::Test
     cell_1 = @board.cells["A1"]
     cell_2 = @board.cells["A2"]
     cell_3 = @board.cells["A3"]
-    
+
     assert_equal @cruiser, cell_1.ship
     assert_equal @cruiser, cell_2.ship
     assert_equal @cruiser, cell_3.ship
     assert_equal true, cell_3.ship == cell_2.ship
   end
 
+  def test_it_doesnt_have_overlapping_ships
+    @board.place(@cruiser, ["A1", "A2", "A3"])
+
+    assert_equal false, @board.valid_placement?(@submarine, ["A1", "B1"])
+  end
+
+  def test_it_can_render_a_board
+    @board.place(@cruiser, ["A1", "A2", "A3"])
+
+    assert_equal " 1 2 3 4 \nA . . . . \nB . . . . \nC . . . . \nD . . . . \n", @board.render
+    assert_equal " 1 2 3 4 \nA S S S . \nB . . . . \nC . . . . \nD . . . . \n", @board.render(true)
+  end
   # def test_valid_placement_components
   #   ship = Ship.new("Submarine", 3)
   #   coordinates = ["A1", "A2", "A3"]

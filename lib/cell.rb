@@ -32,6 +32,8 @@ class Cell
   def render(show_ship = false)
     if !fired_upon? && !empty? && show_ship
       "S"
+    elsif !fired_upon? && !empty? && !show_ship
+      "."
     elsif !fired_upon? && empty?
       "."
     elsif empty?

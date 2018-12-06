@@ -101,17 +101,13 @@ class ValidPlacementTest < Minitest::Test
   end
 
   def test_invalid_placement_not_consecutive
-    cruiser = Ship.new("Cruiser", 3)
-    submarine = Ship.new("Submarine", 2)
-    assert_equal false, @placement.valid_placement?(cruiser,["A1", "A2", "A4"])
-    assert_equal false, @placement.valid_placement?(submarine,["A1", "C1"])
+    assert_equal false, @placement.valid_placement?(@cruiser,["A1", "A2", "A4"])
+    assert_equal false, @placement.valid_placement?(@submarine,["A1", "C1"])
   end
 
   def test_invalid_placement_diagonal
-    cruiser = Ship.new("Cruiser", 3)
-    submarine = Ship.new("Submarine", 2)
-    assert_equal false, @placement.valid_placement?(cruiser,["A1", "B2", "C3"])
-    assert_equal false, @placement.valid_placement?(submarine,["C2", "D3"])
+    assert_equal false, @placement.valid_placement?(@cruiser,["A1", "B2", "C3"])
+    assert_equal false, @placement.valid_placement?(@submarine,["C2", "D3"])
   end
 
   def test_valid_placement
