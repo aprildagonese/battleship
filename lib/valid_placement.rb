@@ -8,18 +8,6 @@ class ValidPlacement
     @coordinates = coordinates
   end
 
-  def valid_placement?(ship, coordinates)
-    if valid_size?(ship, coordinates)
-      if valid_matching_letters?(coordinates) || valid_matching_numbers?(coordinates)
-        true
-      else
-        false
-      end
-    else
-      false
-    end
-  end
-
   def valid_size?(ship, coordinates)
     ship.length == coordinates.count
   end
@@ -53,14 +41,30 @@ class ValidPlacement
   end
 
   def valid_matching_letters?(coordinates)
-    matching?(split_letters(coordinates)) && !matching?(split_numbers(coordinates)) && consecutive_numbers?(split_numbers(coordinates))
+    letters = split_letters(coordinates)
+    numbers = split_numbers(coordinates)
+    matching?(letters) && !matching?(numbers) && consecutive_numbers?(numbers)
   end
 
   def valid_matching_numbers?(coordinates)
-    (!matching?(split_letters(coordinates))) && matching?(split_numbers(coordinates)) && consecutive_letters?(split_letters(coordinates))
+    letters = split_letters(coordinates)
+    numbers = split_numbers(coordinates)
+    (!matching?(letters)) && matching?(numbers) && consecutive_letters?(letters)
   end
 
+  def valid_placement?(ship, coordinates)
+    if valid_size?(ship, coordinates)
+      if valid_matching_letters?(coordinates) || valid_matching_numbers?(coordinates)
+        true
+      else
+        false
+      end
+    else
+      false
+    end
+  end
 
+end
   # def valid_placement2?
   #   if valid_size?(ship, coordinates) && valid_matching_letters?(coordinates) && valid_matching_numbers?(coordinates)
   #     true
@@ -102,9 +106,6 @@ class ValidPlacement
   # def valid_matching_numbers?(coordinates)
   #   !matching?(split_letters(coordinates)) && matching?(split_numbers(coordinates)) && consecutive?(split_letters(coordinates))
   # end
-
-
-end
 
 # test_array2 = ["A1", "B1", "C1", "D1"]
 # cruiser = Ship.new("Cruiser", 3)
