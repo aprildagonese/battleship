@@ -17,9 +17,9 @@ class Board
 
   def numbers_array
     (1..@width).to_a
-  end #refactor this later
+  end
 
-  def cells_hash #refactor this later
+  def cells_hash
     cells_hash = {}
     letters_array.each do |letter|
       numbers_array.each do |number|
@@ -41,7 +41,7 @@ class Board
   end
 
   def valid_placement?(ship, coordinates)
-    placement = ValidPlacement.new(ship, coordinates)
+    placement = ValidPlacement.new
     placement.valid_placement?(ship, coordinates) && overlapping_ships?(coordinates)
   end
 
@@ -65,15 +65,29 @@ class Board
 
     render_array << " "
     numbers_array.each do |number|
-      render_array << " " + number.to_s
+      if numbers_array.count > 9
+        if number < 9
+          render_array << " " + number.to_s + " "
+        else
+          render_array << " " + number.to_s
+        end
+      else
+          render_array << " " + number.to_s
+      end
     end
     render_array << " \n"
 
     letters_array.each do |letter|
       render_array << letter + " "
       numbers_array.each do |number|
-        temp_key = "#{letter}#{number.to_s}"
-        render_array << cells[temp_key].render(show_ship) + " "
+        if numbers_array.count > 9
+          temp_key = "#{letter}#{number.to_s}"
+          render_array << cells[temp_key].render(show_ship) + " "
+          render_array << " "
+        else
+          temp_key = "#{letter}#{number.to_s}"
+          render_array << cells[temp_key].render(show_ship) + " "
+        end
       end
       render_array << "\n"
     end

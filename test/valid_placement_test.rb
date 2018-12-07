@@ -9,8 +9,7 @@ require 'pry'
 class ValidPlacementTest < Minitest::Test
 
   def setup
-    #@board = Board.new
-    @placement = ValidPlacement.new(@cruiser, ["A1", "D1"])
+    @placement = ValidPlacement.new
     @cruiser = Ship.new("Cruiser", 3)
     @submarine = Ship.new("Submarine", 2)
   end
@@ -117,17 +116,6 @@ class ValidPlacementTest < Minitest::Test
     assert_equal true, @placement.valid_placement?(cruiser,["B1", "C1", "D1"])
   end
 
-  # def test_valid_placement_components
-  #   ship = Ship.new("Submarine", 3)
-  #   coordinates = ["A1", "A2", "A3"]
-  #   assert_equal true, @board.valid_size?(ship, coordinates)
-  #   assert_equal true, @board.matching?(@board.split_letters(coordinates)) && !@board.matching?(@board.split_numbers(coordinates)) && @board.consecutive?(@board.split_numbers(coordinates))
-  #
-  #   # assert_equal true, !@board.matching?(@board.split_letters(coordinates)) && @board.matching?(@board.split_numbers(coordinates)) && @board.consecutive?(@board.split_letters(coordinates))
-  #
-  #   assert_equal true, !@board.matching?(@board.split_letters(coordinates))
-  #   assert_equal true, @board.matching?(@board.split_numbers(coordinates))
-  #   assert_equal true, @board.consecutive?(@board.split_letters(coordinates))
-  # end
+
 
 end

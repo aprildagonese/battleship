@@ -45,52 +45,6 @@ class BoardTest < Minitest::Test
     assert_equal false, board2.valid_coordinate?("E8")
     assert_equal false, board2.valid_coordinate?("Z77")
   end
-  #
-  # def test_valid_size
-  #   assert_equal false, @board.valid_size?(@cruiser,["A1", "A2"])
-  #   assert_equal false, @board.valid_size?(@submarine,["A2", "A3", "A4"])
-  #   assert_equal true, @board.valid_size?(@submarine,["A2", "A3"])
-  # end
-  # #
-  # def test_split_letters
-  #   test_array = ["A2", "B2", "C2", "D2"]
-  #   assert_equal ["A", "B", "C", "D"], @board.split_letters(test_array)
-  # end
-  #
-  # def test_split_numbers
-  #   test_array = ["A3", "A1", "A2", "A4"]
-  #   assert_equal [3, 1, 2, 4], @board.split_numbers(test_array)
-  # end
-  #
-  # def test_matching_letters
-  #   test_array1 = ["A3", "A1", "A2", "A4"]
-  #   test_letters1 = @board.split_letters(test_array1)
-  #   assert_equal true, @board.matching?(test_letters1)
-  #   test_array2 = ["A2", "A2", "C2", "D2"]
-  #   test_letters2 = @board.split_letters(test_array2)
-  #   assert_equal false, @board.matching?(test_letters2)
-  # end
-  #
-  # def test_matching_numbers
-  #   test_array1 = ["A3", "A1", "A2", "A4"]
-  #   test_numbers1 = @board.split_numbers(test_array1)
-  #   assert_equal false, @board.matching?(test_numbers1)
-  #   test_array2 = ["A2", "A2", "C2", "D2"]
-  #   test_numbers2 = @board.split_numbers(test_array2)
-  #   assert_equal true, @board.matching?(test_numbers2)
-  # end
-  #
-  # def test_consecutive
-  #   test_array1 = ["A1", "A2", "A3", "A4"]
-  #   test_numbers1 = @board.split_numbers(test_array1)
-  #   assert_equal true, @board.consecutive?(test_numbers1)
-  #   test_array2 = ["A3", "A1", "A2", "A4"]
-  #   test_numbers2 = @board.split_numbers(test_array2)
-  #   assert_equal true, @board.consecutive?(test_numbers2)
-  #   test_array3 = ["A2", "B2", "C2", "D2"]
-  #   test_numbers3 = @board.split_numbers(test_array3)
-  #   assert_equal false, @board.consecutive?(test_numbers3)
-  # end
 
   def test_invalid_placement_not_correct_length
     assert_equal false, @board.valid_placement?(@cruiser,["A1", "A2"])
@@ -152,7 +106,19 @@ class BoardTest < Minitest::Test
     assert_equal "  1 2 3 4 \nA S S S . \nB . . M X \nC . . . X \nD . . . . \n", @board.render(true)
 
     puts "\n"
-    puts @board.render(true)
+    board2 = Board.new(26, 26)
+    board2.place(@cruiser, ["A1", "A2", "A3"])
+    board2.place(@submarine, ["B18", "C18"])
+    @battelship = Ship.new("Battle Ship", 6)
+    board2.place(@battelship, ["E7", "E2", "E3", "E4", "E5", "E6"])
+    hit_cell = board2.cells["B18"]
+    hit_cell.fire_upon
+    miss_cell = board2.cells["B3"]
+    miss_cell.fire_upon
+    hit_cell = board2.cells["C18"]
+    hit_cell.fire_upon
+    puts board2.render(true)
+    puts @submarine.health
   end
 
 end
