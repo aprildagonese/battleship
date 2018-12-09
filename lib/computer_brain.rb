@@ -19,10 +19,6 @@ class ComputerBrain
     @attacked_keys << key
   end
 
-  # def split_key(key)
-  #   key.split
-  # end
-
   def generate_smart_attack_key
     last_key = @attacked_keys.last
 
