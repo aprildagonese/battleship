@@ -34,7 +34,7 @@ class TurnTest < Minitest::Test
     assert_equal "A1", @turn1.get_coords
   end
 
-  def test_it_attacks
+  def test_it_attacks_valid
     @user_board.place(@cruiser, ["A1", "A2", "A3"])
     @computer_board.place(@submarine, ["A2", "A3"])
     assert_equal false, @computer_board.cells["A2"].fired_upon?
@@ -42,11 +42,21 @@ class TurnTest < Minitest::Test
     @turn1.player_attacks(@turn1.get_coords)
     assert_equal true, @computer_board.cells["A2"].fired_upon?
     p @turn1.display_computer_board
-
-
   end
 
-  # def test_it_generates_computer_shot
-  # end
+  def test_it_attacks_invalid
+    @user_board.place(@cruiser, ["A1", "A2", "A3"])
+    @computer_board.place(@submarine, ["A2", "A3"])
+    assert_equal false, @computer_board.cells["A2"].fired_upon?
+
+    hit_cell = @computer_board.cells["A2"]
+    hit_cell.fire_upon
+    @turn1.player_attacks(@turn1.get_coords)
+    assert_equal true, @computer_board.cells["A2"].fired_upon?
+    p @turn1.display_computer_board
+  end
+
+  def test_it_generates_computer_shot
+  end
 
 end

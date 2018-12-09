@@ -15,12 +15,14 @@ class Turn
   end
 
   def player_attacks(get_coords)
+    # p "Please enter coordinates:"
+    #get_coords = gets.chomp().to_s
     if !@computer_board.valid_coordinate?(get_coords)
       p "Attack coordinate invalid. Please try again!"
-      player_attacks
+      player_attacks(gets.chomp().to_s)
     elsif @computer_board.cells[get_coords].fired_upon?
       p "You've already attacked this cell! Please choose again."
-      player_attacks
+      player_attacks(gets.chomp().to_s)
     else @computer_board.cells[get_coords].fire_upon
     end
   end
@@ -28,6 +30,9 @@ class Turn
   def get_coords
     p "Please enter coordinates:"
     gets.chomp().to_s
+  end
+
+  def computer_attack
   end
 
 
