@@ -117,8 +117,11 @@ class BoardTest < Minitest::Test
     miss_cell.fire_upon
     hit_cell = board2.cells["C18"]
     hit_cell.fire_upon
+    hit_cell2 = board2.cells["E7"]
+    hit_cell2.fire_upon
     puts board2.render(true)
     puts @submarine.health
+
   end
 
 end
