@@ -15,7 +15,6 @@ class TurnTest < Minitest::Test
     @cruiser = Ship.new("Cruiser", 3)
     @submarine = Ship.new("Submarine", 2)
     @turn1 = Turn.new(@user_board, @computer_board)
-
   end
 
   def test_it_exists
