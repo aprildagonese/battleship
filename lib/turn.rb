@@ -1,8 +1,9 @@
 class Turn
 
-  def initialize(user_board, computer_board)
+  def initialize(user_board, computer_board, computer_brain)
     @user_board = user_board
     @computer_board = computer_board
+    @computer_brain
   end
 
 #player gives us a coord, we find cell, we fire upon it
