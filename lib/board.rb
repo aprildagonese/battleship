@@ -72,7 +72,7 @@ class Board
           render_array << " " + number.to_s
         end
       else
-          render_array << " " + number.to_s
+        render_array << " " + number.to_s
       end
     end
     render_array << " \n"

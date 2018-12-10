@@ -6,6 +6,8 @@ class Turn
     @computer_brain
   end
 
+
+
 #player gives us a coord, we find cell, we fire upon it
   def display_user_board
     @user_board.render(true)
@@ -32,10 +34,5 @@ class Turn
     p "Please enter coordinates:"
     gets.chomp().to_s
   end
-
-  def computer_attack
-  end
-
-
 
 end
