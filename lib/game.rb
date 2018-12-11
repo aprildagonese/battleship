@@ -20,11 +20,10 @@ class Game
     @user_board = Board.new(board_size)
     @computer_board = Board.new(board_size)
 
-    set_up_board
     @computer_player = ComputerBrain.new(@user_board, @computer_board)
-    @computer_player.cpu_place_ships(ships) #NEED SHIPS ARRAY
+    @computer_player.cpu_place_ships(@computer_board.get_ships)
 
-    until @user_board.ships
+    until #UNTIL USER BOARD SHIPS OR COMP BOARD SHIPS ARE ALL SUNK
       Turn.new(@user_board, @computer_board, @computer_player).take_turn
     end
   end
@@ -53,18 +52,17 @@ class Game
     end
   end
 
-  def set_up_board
-    get_ships.each do |ship|
+  def set_up_board(board)
+    generate_ships(board).each do |ship|
       validate_placement(ship)
     end
   end
 
-  def get_ships
+  def ships_message(board) APRIL WORK ON THIS
     puts "Now you need to place your ships. Here is your board:"
-    puts @user_board.render(true)
-
+    puts board.render(true)
     puts "You have the following ships to play with:"
-    puts "***NEED TO PROVIDE SHIPS IN ARRAY***"
+    ships = board.ships
     ships = [@cruiser = Ship.new("Cruiser", 3), @submarine = Ship.new("Submarine", 2)]
     ships.each do |ship|
       puts "#{ship.name}, #{ship.length} cells long"
@@ -92,4 +90,4 @@ class Game
 end
 
 game = Game.new
-game.start_game
+game.set_up_game

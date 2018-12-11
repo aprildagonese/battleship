@@ -36,13 +36,12 @@ class Board
     ship_count = @width
     available_ships = [["Submarine", 2], ["Cruiser", 3], ["Battleship", 4]]
     ships = []
-    until ships.count == ship_count
+    while ships.count < ship_count
       available_ships.each do |ship_info|
-        ship_info.each do |name, size|
-          ships << Ship.new(name, size)
-        end
+        ships << Ship.new(ship_info[0], ship_info[1])
       end
     end
+    return ships
   end
 
   def render(show_ship = false)
