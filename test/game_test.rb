@@ -6,7 +6,7 @@ require './lib/board'
 require './lib/valid_placement'
 require './lib/turn'
 require './lib/computer_brain'
-require ',/lib/game.rb'
+require './lib/game.rb'
 require 'pry'
 
 class ComputerBrainTest < Minitest::Test
@@ -22,4 +22,4 @@ class ComputerBrainTest < Minitest::Test
     @game = Game.new
   end
 
-  def test_
+end

@@ -68,8 +68,8 @@ class Game
 
   def validate_placement(ship)
     puts "Please choose #{ship.length} cells where you would like to place your #{ship.name}. For example, you can type 'A1, A2, etc.' separated by commas:"
-    user_coords = gets.chomp.to_s.upcase
-    if ValidPlacement.valid_placement?(ship, user_coords)
+    user_coords = gets.chomp.gsub(/\s+/, "").split(",")
+    if @user_board.valid_placement?(ship, user_coords)
       user_coords.each do |coord|
         @user_board.cells[coord].place_ship(ship)
       end
