@@ -4,9 +4,9 @@ require './lib/valid_placement'
 class Board
   attr_reader :cells, :height, :width
 
-  def initialize(height = 4, width = 4)
-    @width = width #width is for numbers
-    @height = height #height is for letters
+  def initialize(size = 4)
+    @width = size #width is for numbers
+    @height = size #height is for letters
     @cells = cells_hash
   end
 
