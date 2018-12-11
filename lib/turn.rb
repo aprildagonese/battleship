@@ -18,14 +18,14 @@ class Turn
 
   def display_user_board
     puts "*** Here's your current board *** \n"
-    @user_board.render(true)
+    puts @user_board.render(true)
     puts "------------------------------------"
 
   end
 
   def display_computer_board
     puts "*** Here's my current board *** \n"
-    @computer_board.render
+    puts @computer_board.render
     puts "------------------------------------"
   end
 
@@ -40,6 +40,7 @@ class Turn
     else @computer_board.cells[attack_coords].fire_upon
       puts "Executing attack on #{attack_coords}."
       @computer_board.attacked_cells << attack_coords
+      system('clear')
     end
   end
 
@@ -49,9 +50,9 @@ class Turn
   end
 
   def player_outcome
-    last_attack = @computer_board.cells[@computer_board.attacked_keys.last]
+    last_attack = @computer_board.cells[@computer_board.attacked_cells.last]
     if last_attack.render == "X"
-      puts "You sunk my #{last_attack.ship}!"
+      puts "You sunk my #{last_attack.ship.name}!"
     elsif last_attack.render == "H"
         puts "You got a hit!"
     elsif last_attack.render == "M"
@@ -64,7 +65,7 @@ class Turn
   def computer_outcome
     last_attack = @user_board.cells[@user_board.attacked_cells.last]
     if last_attack.render == "X"
-      puts "I sunk your #{last_attack.ship}!"
+      puts "I sunk your #{last_attack.ship.name}!"
     elsif last_attack.render == "H"
         puts "I got a hit!"
     elsif last_attack.render == "M"

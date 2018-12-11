@@ -11,10 +11,14 @@ class Game
   def initialize
   end
 
-  def set_up_game
+  def game_start
     puts "Welcome to BATTLESHIP"
     get_start_message_input
+    set_up_game
+  end
 
+  def set_up_game
+    system('clear')
     puts "The sides of our boards can be anywhere from 4 cells to 26 cells wide. Please enter a number between 4 and 26 to tell me how big our boards should be."
     board_size = get_board_size
     @user_board = Board.new(board_size)
@@ -23,9 +27,18 @@ class Game
     @computer_player = ComputerBrain.new(@user_board, @computer_board)
     @computer_player.cpu_place_ships(@computer_board.get_ships)
 
-    until #UNTIL USER BOARD SHIPS OR COMP BOARD SHIPS ARE ALL SUNK
+    set_up_board
+
+    puts "Ok, game on!"
+
+    until all_ships_sunk?(@user_board) || all_ships_sunk?(@computer_board)
       Turn.new(@user_board, @computer_board, @computer_player).take_turn
     end
+
+    end_game
+    puts "Good game! Would you like to play again?"
+    get_start_message_input
+    Game.new.set_up_game
   end
 
   def get_start_message_input
@@ -47,26 +60,28 @@ class Game
       puts "Sorry, it needs to be a number between 4 and 26. Please try again."
       get_board_size
     else
+      system('clear')
       puts "Ok, we'll play on #{board_size}x#{board_size} boards."
       return board_size
     end
   end
 
-  def set_up_board(board)
-    generate_ships(board).each do |ship|
+  def set_up_board
+    ships_message
+    @user_board.ships.each do |ship|
       validate_placement(ship)
     end
   end
 
-  def ships_message(board) APRIL WORK ON THIS
+  def ships_message
     puts "Now you need to place your ships. Here is your board:"
-    puts board.render(true)
+    puts @user_board.render(true)
     puts "You have the following ships to play with:"
-    ships = board.ships
-    ships = [@cruiser = Ship.new("Cruiser", 3), @submarine = Ship.new("Submarine", 2)]
+    ships = @user_board.ships
     ships.each do |ship|
       puts "#{ship.name}, #{ship.length} cells long"
     end
+    puts "-------------------------"
     return ships
   end
 
@@ -77,17 +92,39 @@ class Game
       user_coords.each do |coord|
         @user_board.cells[coord].place_ship(ship)
       end
+      system('clear')
       puts "Great! Your #{ship.name} is now on cells #{user_coords}."
+      puts @user_board.render(true)
     else
       puts "Sorry, those cells don't work. Try again."
       validate_placement(ship)
     end
   end
 
-#Turn methods
-#End game
+  def all_ships_sunk?(board)
+    board.ships.all? do |ship|
+      ship.sunk?
+    end
+  end
+
+  def end_game
+    puts " "
+    if all_ships_sunk(@user_board) && all_ships_sunk(@computer_board)
+      puts "We got a tie!"
+    elsif all_ships_sunk?(@user_board)
+      puts "I sunk all your ships! I win!"
+    elsif all_ships_sunk?(@computer_board)
+      puts "You sunk all my ships! You win!"
+    end
+    puts "*** Here's your final board *** \n"
+    puts @user_board.render(true)
+    puts "------------------------------------"
+    puts "*** Here's my final board *** \n"
+    puts @computer_board.render
+    puts "------------------------------------"
+  end
 
 end
 
 game = Game.new
-game.set_up_game
+game.game_start

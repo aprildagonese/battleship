@@ -13,8 +13,8 @@ class ComputerBrainTest < Minitest::Test
   def setup
     @user_board = Board.new
     @computer_board = Board.new
-    @user_board2 = Board.new(8, 8)
-    @computer_board2 = Board.new(8, 8)
+    @user_board2 = Board.new(8)
+    @computer_board2 = Board.new(8)
     @cruiser = Ship.new("Cruiser", 3)
     @submarine = Ship.new("Submarine", 2)
     @submarine2 = Ship.new("Submarine", 2)

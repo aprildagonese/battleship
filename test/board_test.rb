@@ -20,7 +20,7 @@ class BoardTest < Minitest::Test
   def test_it_gets_ships
     board2 = Board.new(6)
     assert_instance_of Ship, board2.get_ships.first
-    assert_equal 6, board2.get_ships.count
+    assert_equal 2, board2.get_ships.count
   end
 
   def test_cells_hash
@@ -125,7 +125,6 @@ class BoardTest < Minitest::Test
     hit_cell.fire_upon
     hit_cell2 = board2.cells["E7"]
     hit_cell2.fire_upon
-    puts board2.render(true)
     puts @submarine.health
 
   end

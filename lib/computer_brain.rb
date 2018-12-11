@@ -100,6 +100,7 @@ class ComputerBrain
     @user_board.cells[key].fire_upon
     @available_keys.delete(key)
     @attacked_keys << key
+    @user_board.attacked_cells << key
   end
 
   def generate_smart_attack_key

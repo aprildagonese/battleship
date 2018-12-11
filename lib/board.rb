@@ -2,7 +2,7 @@ require './lib/cell'
 require './lib/valid_placement'
 
 class Board
-  attr_reader :cells, :height, :width, :ships
+  attr_accessor :cells, :height, :width, :ships, :attacked_cells
 
   def initialize(size = 4)
     @width = size #width is for numbers
@@ -33,13 +33,13 @@ class Board
   end
 
   def get_ships
-    ship_count = @width
+    ship_count = 2
     available_ships = [["Submarine", 2], ["Cruiser", 3], ["Battleship", 4]]
     ships = []
+    counter = 0
     while ships.count < ship_count
-      available_ships.each do |ship_info|
-        ships << Ship.new(ship_info[0], ship_info[1])
-      end
+      ships << Ship.new(available_ships[counter][0], available_ships[counter][1])
+      counter += 1
     end
     return ships
   end
