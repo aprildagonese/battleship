@@ -3,10 +3,8 @@
 
 class ValidPlacement
 
-  # def initialize(ship, coordinates)
-  #   @ship = ship
-  #   @coordinates = coordinates
-  # end
+  def initialize
+  end
 
   def valid_size?(ship, coordinates)
     ship.length == coordinates.count

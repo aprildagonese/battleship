@@ -17,6 +17,12 @@ class BoardTest < Minitest::Test
     assert_instance_of Board, @board
   end
 
+  def test_it_gets_ships
+    board2 = Board.new(6)
+    assert_instance_of Ship, board2.get_ships.first
+    assert_equal 2, board2.get_ships.count
+  end
+
   def test_cells_hash
     assert_equal Hash, @board.cells.class
     assert_equal 16, @board.cells.length
@@ -24,7 +30,7 @@ class BoardTest < Minitest::Test
   end
 
   def test_array_of_letters
-    board2 = Board.new(6, 7)
+    board2 = Board.new(6)
     assert_equal ["A", "B", "C", "D"], @board.letters_array
     assert_equal ["A", "B", "C", "D", "E", "F"], board2.letters_array
   end
@@ -37,14 +43,14 @@ class BoardTest < Minitest::Test
     assert_equal false, @board.valid_coordinate?("A22")
   end
 
-  def test_valid_coordinate_custom_board
-    board2 = Board.new(6, 7)
-    assert_equal true, board2.valid_coordinate?("A1")
-    assert_equal true, board2.valid_coordinate?("E5")
-    assert_equal false, board2.valid_coordinate?("L2")
-    assert_equal false, board2.valid_coordinate?("E8")
-    assert_equal false, board2.valid_coordinate?("Z77")
-  end
+  # def test_valid_coordinate_custom_board
+  #   board2 = Board.new(6, 7)
+  #   assert_equal true, board2.valid_coordinate?("A1")
+  #   assert_equal true, board2.valid_coordinate?("E5")
+  #   assert_equal false, board2.valid_coordinate?("L2")
+  #   assert_equal false, board2.valid_coordinate?("E8")
+  #   assert_equal false, board2.valid_coordinate?("Z77")
+  # end
 
   def test_invalid_placement_not_correct_length
     assert_equal false, @board.valid_placement?(@cruiser,["A1", "A2"])
@@ -106,7 +112,7 @@ class BoardTest < Minitest::Test
     assert_equal "  1 2 3 4 \nA S S S . \nB . . M X \nC . . . X \nD . . . . \n", @board.render(true)
 
     puts "\n"
-    board2 = Board.new(26, 26)
+    board2 = Board.new(26)
     board2.place(@cruiser, ["A1", "A2", "A3"])
     board2.place(@submarine, ["B18", "C18"])
     @battelship = Ship.new("Battle Ship", 6)
@@ -119,7 +125,6 @@ class BoardTest < Minitest::Test
     hit_cell.fire_upon
     hit_cell2 = board2.cells["E7"]
     hit_cell2.fire_upon
-    puts board2.render(true)
     puts @submarine.health
 
   end
