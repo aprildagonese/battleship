@@ -11,7 +11,7 @@ class Game
   def initialize
   end
 
-  def start_game
+  def set_up_game
     puts "Welcome to BATTLESHIP"
     get_start_message_input
 
@@ -21,6 +21,12 @@ class Game
     @computer_board = Board.new(board_size)
 
     set_up_board
+    @computer_player = ComputerBrain.new(@user_board, @computer_board)
+    @computer_player.cpu_place_ships(ships) #NEED SHIPS ARRAY
+
+    until @user_board.ships
+      Turn.new(@user_board, @computer_board, @computer_player).take_turn
+    end
   end
 
   def get_start_message_input
@@ -58,7 +64,7 @@ class Game
     puts @user_board.render(true)
 
     puts "You have the following ships to play with:"
-    puts "NEED TO PROVIDE SHIPS IN ARRAY"
+    puts "***NEED TO PROVIDE SHIPS IN ARRAY***"
     ships = [@cruiser = Ship.new("Cruiser", 3), @submarine = Ship.new("Submarine", 2)]
     ships.each do |ship|
       puts "#{ship.name}, #{ship.length} cells long"
@@ -80,12 +86,6 @@ class Game
     end
   end
 
-
-
-
-
-
-#Setup
 #Turn methods
 #End game
 

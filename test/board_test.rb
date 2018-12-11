@@ -17,6 +17,9 @@ class BoardTest < Minitest::Test
     assert_instance_of Board, @board
   end
 
+  def test_it_gets_ships
+  end 
+
   def test_cells_hash
     assert_equal Hash, @board.cells.class
     assert_equal 16, @board.cells.length

@@ -28,7 +28,6 @@ class Cell
     end
   end
 
-  #Revisit to make easier to read/better flow
   def render(show_ship = false)
     if !fired_upon? && !empty? && show_ship
       "S"
