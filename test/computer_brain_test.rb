@@ -44,15 +44,27 @@ class ComputerBrainTest < Minitest::Test
     assert_equal "C3", @comp_brain.make_limited_placement_array(ship2).last
   end
 
-  def test_it_can_test_direction
+  def test_it_can_make_potential_keys_in_a_direction
+    # @computer_board.place(@submarine, ["C3", "D3"])
+    # @comp_brain.validated_keys = ["C3", "D3"]
+    ship = @cruiser
+    ship2 = @submarine
+
+    assert_equal ["A1", "B1", "C1"], @comp_brain.vertical_directional_keys("A", 1, ship)
+    assert_equal ["B2", "B3", "B4"], @comp_brain.horizontal_directional_keys("B", 2, ship)
+    assert_equal ["C5", "D5"], @comp_brain.vertical_directional_keys("C", 5, ship2)
+    assert_equal ["C5", "C6"], @comp_brain.horizontal_directional_keys("C", 5, ship2)
+  end
+
+  def test_it_can_validate_direction
     @computer_board.place(@submarine, ["C3", "D3"])
     @comp_brain.validated_keys = ["C3", "D3"]
     ship = @cruiser
 
-    assert_equal false, @comp_brain.directional_search("C1", :horizontal, ship)
-    assert_equal false, @comp_brain.directional_search("A3", :vertical, ship)
-    assert_equal ["B2", "B3", "B4"], @comp_brain.directional_search("B2", :horizontal, ship)
-    assert_equal ["B2", "C2", "D2"], @comp_brain.directional_search("B2", :vertical, ship)
+    assert_equal false, @comp_brain.directional_validation("C1", :horizontal, ship)
+    assert_equal false, @comp_brain.directional_validation("A3", :vertical, ship)
+    assert_equal ["B2", "B3", "B4"], @comp_brain.directional_validation("B2", :horizontal, ship)
+    assert_equal ["B2", "C2", "D2"], @comp_brain.directional_validation("B2", :vertical, ship)
   end
 
   def test_it_can_invalidate_occupied_cells
@@ -68,7 +80,11 @@ class ComputerBrainTest < Minitest::Test
   def test_it_can_place_ships
     @destroyer = Ship.new("Destroyer", 4)
     @battleship = Ship.new("Battelship", 5)
-    ships = [@submarine, @cruiser, @destroyer, @battleship]
+    @battleship2 = Ship.new("Battelship", 5)
+    @battleship3 = Ship.new("Battelship", 5)
+    @cruiser2 = Ship.new("cruiser", 3)
+    @cruiser3 = Ship.new("cruiser", 3)
+    ships = [@submarine, @cruiser, @destroyer, @battleship, @cruiser2, @cruiser3, @battleship2, @battleship3]
     @comp_brain2.cpu_place_ships(ships)
 
     puts @computer_board2.render(true)
