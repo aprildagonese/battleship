@@ -1,9 +1,10 @@
 class Turn
+  attr_accessor :user_board, :computer_board
 
   def initialize(user_board, computer_board, computer_brain)
     @user_board = user_board
     @computer_board = computer_board
-    @computer_brain
+    @computer_brain = computer_brain
   end
 
 
