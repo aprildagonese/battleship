@@ -2,21 +2,14 @@ require './lib/cell'
 require './lib/valid_placement'
 
 class Board
-  attr_reader :cells, :height, :width
+  attr_reader :cells, :height, :width, :ships
 
   def initialize(size = 4)
     @width = size #width is for numbers
     @height = size #height is for letters
     @cells = cells_hash
-  end
-
-  def letters_array
-    end_letter = (@height + 64).chr
-    ("A"..end_letter).to_a
-  end
-
-  def numbers_array
-    (1..@width).to_a
+    @ships = get_ships
+    @attacked_cells = []
   end
 
   def cells_hash
@@ -30,28 +23,25 @@ class Board
     return cells_hash
   end
 
-  def valid_coordinate?(coordinate)
-    cells.member?(coordinate)
+  def numbers_array
+    (1..@width).to_a
   end
 
-  def overlapping_ships?(coordinates)
-    coordinates.all? do |coordinate|
-      cells[coordinate].empty?
-    end
+  def letters_array
+    end_letter = (@height + 64).chr
+    ("A"..end_letter).to_a
   end
 
-  def valid_placement?(ship, coordinates)
-    placement = ValidPlacement.new
-    placement.valid_placement?(ship, coordinates) && overlapping_ships?(coordinates)
-  end
-
-  def place(ship, coordinates)
-    if valid_placement?(ship, coordinates)
-      coordinates.each do |coordinate|
-        cells[coordinate].place_ship(ship)
+  def get_ships
+    ship_count = @width
+    available_ships = [["Submarine", 2], ["Cruiser", 3], ["Battleship", 4]]
+    ships = []
+    until ships.count == ship_count
+      available_ships.each do |ship_info|
+        ship_info.each do |name, size|
+          ships << Ship.new(name, size)
+        end
       end
-    # else
-    #   puts invalid_return_statement
     end
   end
 
@@ -59,10 +49,8 @@ class Board
     render_array(show_ship).join.to_s
   end
 
-
   def render_array(show_ship)
     render_array = []
-
     render_array << " "
     numbers_array.each do |number|
       if numbers_array.count > 9
@@ -92,6 +80,27 @@ class Board
       render_array << "\n"
     end
     return render_array
+  end
+
+  def place(ship, coordinates)
+    coordinates.each do |coordinate|
+      cells[coordinate].place_ship(ship)
+    end
+  end
+
+  def valid_placement?(ship, coordinates)
+    placement = ValidPlacement.new
+    placement.valid_placement?(ship, coordinates) && overlapping_ships?(coordinates)
+  end
+
+  def overlapping_ships?(coordinates)
+    coordinates.all? do |coordinate|
+      cells[coordinate].empty?
+    end
+  end
+
+  def valid_coordinate?(coordinate)
+    cells.member?(coordinate)
   end
 
 end
