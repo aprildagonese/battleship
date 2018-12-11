@@ -3,7 +3,7 @@ require 'pry'
 class ComputerBrain
   attr_accessor :attacked_keys, :available_keys
 
-  def initialize(user_board)
+  def initialize(user_board, computer_board)
     @user_board = user_board
     @attacked_keys = []
     @available_keys = @user_board.cells.keys
