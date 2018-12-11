@@ -12,57 +12,6 @@ class ComputerBrain
   end
 
   ##Computer place methods
-
-  def make_limited_placement_array(ship)
-    length = ship.length
-    max_width = @cpu_board.width - length + 1
-    max_height = (@cpu_board.height - length + 65).chr
-
-    potential_first_keys = []
-    ("A"..max_height).to_a.each do |letter|
-      (1..max_width).to_a.each do |number|
-        potential_first_keys << "#{letter}#{number}"
-      end
-    end
-    return potential_first_keys
-  end
-
-  def directional_search(coordinate, direction, ship)
-    letter = coordinate.split("")[0]
-    number = coordinate.split("")[1].to_i
-    potential_keys = []
-
-    if direction == :vertical
-      end_letter = (letter.ord + ship.length - 1).chr
-      test_range = (letter..end_letter).to_a
-      test_range.each do |dyn_letter|
-        potential_keys << "#{dyn_letter}#{number}"
-      end
-      if valid_potential_keys?(potential_keys) == true
-        return potential_keys
-      else
-        return false
-      end
-    elsif direction == :horizontal
-      end_number = number + ship.length - 1
-      test_range = (number..end_number).to_a
-      test_range.each do |dyn_number|
-        potential_keys << "#{letter}#{dyn_number}"
-      end
-      if valid_potential_keys?(potential_keys) == true
-        return potential_keys
-      else
-        return false
-      end
-    end
-  end
-
-  def valid_potential_keys?(potential_keys)
-    potential_keys.none? do |key|
-      @validated_keys.include?(key)
-    end
-  end
-
   def cpu_place_ships(ships)
     valid_ship_counter = 0
     @validated_keys = []
@@ -72,7 +21,7 @@ class ComputerBrain
       first_key = potential_array.sample
       if !@validated_keys.include?(first_key)
         search_direction = [:horizontal, :vertical].sample
-        potential_keys = directional_search(first_key, search_direction, ship)
+        potential_keys = directional_validation(first_key, search_direction, ship)
         if potential_keys != false
           @validated_keys << potential_keys
           @validated_keys = @validated_keys.flatten
@@ -93,6 +42,69 @@ class ComputerBrain
       cpu_place_ships(ships)
     end
   end
+
+  def make_limited_placement_array(ship)
+    length = ship.length
+    max_width = @cpu_board.width - length + 1
+    max_height = (@cpu_board.height - length + 65).chr
+
+    potential_first_keys = []
+    ("A"..max_height).to_a.each do |letter|
+      (1..max_width).to_a.each do |number|
+        potential_first_keys << "#{letter}#{number}"
+      end
+    end
+    return potential_first_keys
+  end
+
+  def directional_validation(coordinate, direction, ship)
+    letter = coordinate.split("")[0]
+    number = coordinate.split("")[1].to_i
+
+    if direction == :vertical
+      potential_keys = vertical_directional_keys(letter, number, ship)
+      if valid_potential_keys?(potential_keys) == true
+        return potential_keys
+      else
+        return false
+      end
+    elsif direction == :horizontal
+      potential_keys = horizontal_directional_keys(letter, number, ship)
+      if valid_potential_keys?(potential_keys) == true
+        return potential_keys
+      else
+        return false
+      end
+    end
+  end
+
+  def vertical_directional_keys(letter, number, ship)
+    potential_keys = []
+    end_letter = (letter.ord + ship.length - 1).chr
+    test_range = (letter..end_letter).to_a
+    test_range.each do |dyn_letter|
+      potential_keys << "#{dyn_letter}#{number}"
+    end
+    return potential_keys
+  end
+
+  def horizontal_directional_keys(letter, number, ship)
+    potential_keys = []
+    end_number = number + ship.length - 1
+    test_range = (number..end_number).to_a
+    test_range.each do |dyn_number|
+      potential_keys << "#{letter}#{dyn_number}"
+    end
+    return potential_keys
+  end
+
+  def valid_potential_keys?(potential_keys)
+    potential_keys.none? do |key|
+      @validated_keys.include?(key)
+    end
+  end
+
+
 
   ##Computer attack methods
 
