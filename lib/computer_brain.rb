@@ -1,18 +1,18 @@
 require 'pry'
 
 class ComputerBrain
-  attr_accessor :placed_keys, :attacked_keys, :available_keys
+  attr_accessor :attacked_keys, :available_keys, :validated_keys
 
   def initialize(user_board, cpu_board)
     @user_board = user_board
     @cpu_board = cpu_board
-    @placed_keys = []
     @attacked_keys = []
     @available_keys = @user_board.cells.keys
-
+    @validated_keys = []
   end
 
   ##Computer place methods
+
   def make_limited_placement_array(ship)
     length = ship.length
     max_width = @cpu_board.width - length + 1
@@ -38,29 +38,61 @@ class ComputerBrain
       test_range.each do |dyn_letter|
         potential_keys << "#{dyn_letter}#{number}"
       end
-      potential_keys.all? do |key|
-        @cpu_board.cells[key].empty?
+      if valid_potential_keys?(potential_keys) == true
+        return potential_keys
+      else
+        return false
       end
-
     elsif direction == :horizontal
       end_number = number + ship.length - 1
       test_range = (number..end_number).to_a
       test_range.each do |dyn_number|
         potential_keys << "#{letter}#{dyn_number}"
       end
-      potential_keys.all? do |key|
-        @cpu_board.cells[key].empty?
+      if valid_potential_keys?(potential_keys) == true
+        return potential_keys
+      else
+        return false
       end
     end
+  end
 
+  def valid_potential_keys?(potential_keys)
+    potential_keys.none? do |key|
+      @validated_keys.include?(key)
+    end
   end
 
   def cpu_place_ships(ships)
-    placed_keys = []
+    valid_ship_counter = 0
+    @validated_keys = []
+    validated_ships = []
     ships.each do |ship|
+      potential_array = make_limited_placement_array(ship)
+      first_key = potential_array.sample
+      if !@validated_keys.include?(first_key)
+        search_direction = [:horizontal, :vertical].sample
+        potential_keys = directional_search(first_key, search_direction, ship)
+        if potential_keys != false
+          @validated_keys << potential_keys
+          @validated_keys = @validated_keys.flatten
+          validated_ships << {ship => potential_keys}
+          valid_ship_counter += 1
+        end
+      end
+    end
+    if valid_ship_counter == ships.count
+      validated_ships.each do |hash|
+        hash.each do |ship, keys|
+          keys.each do |key|
+            @cpu_board.cells[key].place_ship(ship)
+          end
+        end
+      end
+    else
+      cpu_place_ships(ships)
     end
   end
-
 
   ##Computer attack methods
 

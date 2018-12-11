@@ -46,16 +46,35 @@ class ComputerBrainTest < Minitest::Test
 
   def test_it_can_test_direction
     @computer_board.place(@submarine, ["C3", "D3"])
+    @comp_brain.validated_keys = ["C3", "D3"]
     ship = @cruiser
 
     assert_equal false, @comp_brain.directional_search("C1", :horizontal, ship)
     assert_equal false, @comp_brain.directional_search("A3", :vertical, ship)
-    assert_equal true, @comp_brain.directional_search("B2", :horizontal, ship)
-    assert_equal true, @comp_brain.directional_search("B2", :vertical, ship)
-
+    assert_equal ["B2", "B3", "B4"], @comp_brain.directional_search("B2", :horizontal, ship)
+    assert_equal ["B2", "C2", "D2"], @comp_brain.directional_search("B2", :vertical, ship)
   end
 
+  def test_it_can_invalidate_occupied_cells
+    @computer_board.place(@submarine, ["C3", "D3"])
+    @comp_brain.validated_keys = ["C3", "D3"]
 
+    assert_equal false, @comp_brain.valid_potential_keys?(["C2", "C3", "C4"])
+    assert_equal false, @comp_brain.valid_potential_keys?(["A3", "B3", "C3"])
+    assert_equal true, @comp_brain.valid_potential_keys?(["B2", "B3", "B4"])
+    assert_equal true, @comp_brain.valid_potential_keys?(["B2", "C2", "D2"])
+  end
+
+  def test_it_can_place_ships
+    @destroyer = Ship.new("Destroyer", 4)
+    @battleship = Ship.new("Battelship", 5)
+    ships = [@submarine, @cruiser, @destroyer, @battleship]
+    @comp_brain2.cpu_place_ships(ships)
+
+    puts @computer_board2.render(true)
+  end
+
+  ##Computer attack method tests
   def test_it_has_initial_key_array
     assert_equal 16, @comp_brain.available_keys.count
   end
