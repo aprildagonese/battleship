@@ -8,11 +8,10 @@ class Turn
   end
 
   def take_turn
-    display_user_board
-    display_computer_board
     player_attacks
     @computer_brain.computer_attacks
-    puts "------------------------------------"
+    display_user_board
+    display_computer_board
     player_outcome
     computer_outcome
     puts "------------------------------------"
@@ -48,7 +47,13 @@ class Turn
 
   def get_coords
     p "What coordinates would you like to attack? For example, you can enter A1:"
-    gets.chomp.upcase.gsub(/\s+/, "")
+    user_input = gets.chomp
+    user_coords = user_input.upcase.gsub(/\s+/, "")
+    if user_input.to_s.strip.upcase == "EXIT"
+      abort("Goodbye.")
+    else
+      return user_coords
+    end
   end
 
   def player_outcome
