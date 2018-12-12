@@ -26,7 +26,7 @@ class Turn
 
   def display_computer_board
     puts "*** Here's my current board *** \n"
-    puts @computer_board.render(true)
+    puts @computer_board.render
     puts "------------------------------------"
   end
 
