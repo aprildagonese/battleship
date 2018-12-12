@@ -12,9 +12,10 @@ class TurnTest < Minitest::Test
   def setup
     @user_board = Board.new
     @computer_board = Board.new
+    @computer_brain = ComputerBrain.new(@user_board, @computer_board)
     @cruiser = Ship.new("Cruiser", 3)
     @submarine = Ship.new("Submarine", 2)
-    @turn1 = Turn.new(@user_board, @computer_board)
+    @turn1 = Turn.new(@user_board, @computer_board, @computer_brain)
   end
 
   def test_it_exists
@@ -24,13 +25,9 @@ class TurnTest < Minitest::Test
   def test_it_displays_boards
     @user_board.place(@cruiser, ["A1", "A2", "A3"])
     @computer_board.place(@submarine, ["A2", "A3"])
-    assert_equal "  1 2 3 4 \nA S S S . \nB . . . . \nC . . . . \nD . . . . \n", @turn1.display_user_board
-    assert_equal "  1 2 3 4 \nA . . . . \nB . . . . \nC . . . . \nD . . . . \n", @turn1.display_computer_board
-  end
 
-  def test_it_can_get_coords_from_player
-    skip
-    assert_equal "A1", @turn1.get_coords
+    assert_equal "  1 2 3 4 \nA S S S . \nB . . . . \nC . . . . \nD . . . . \n", @user_board.render(true)
+    assert_equal "  1 2 3 4 \nA . . . . \nB . . . . \nC . . . . \nD . . . . \n", @computer_board.render
   end
 
   def test_it_attacks_valid
@@ -38,9 +35,8 @@ class TurnTest < Minitest::Test
     @computer_board.place(@submarine, ["A2", "A3"])
     assert_equal false, @computer_board.cells["A2"].fired_upon?
 
-    @turn1.player_attacks(@turn1.get_coords)
+    @turn1.player_attacks("A2")
     assert_equal true, @computer_board.cells["A2"].fired_upon?
-    p @turn1.display_computer_board
   end
 
   def test_it_attacks_invalid
@@ -48,14 +44,8 @@ class TurnTest < Minitest::Test
     @computer_board.place(@submarine, ["A2", "A3"])
     assert_equal false, @computer_board.cells["A2"].fired_upon?
 
-    hit_cell = @computer_board.cells["A2"]
-    hit_cell.fire_upon
-    @turn1.player_attacks(@turn1.get_coords)
+    @turn1.player_attacks("A2")
     assert_equal true, @computer_board.cells["A2"].fired_upon?
-    p @turn1.display_computer_board
-  end
-
-  def test_it_generates_computer_shot
   end
 
 end
