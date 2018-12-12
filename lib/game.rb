@@ -23,30 +23,32 @@ class Game
     board_size = get_board_size
     @user_board = Board.new(board_size)
     @computer_board = Board.new(board_size)
-
     @computer_player = ComputerBrain.new(@user_board, @computer_board)
 
     set_up_board
+    @computer_player.cpu_place_ships(@computer_board.ships)
 
-    @computer_player.cpu_place_ships(@computer_board.get_ships)
-
+    system('clear')
+    initial_board_display
     puts "Ok, game on!"
 
-    until all_ships_sunk?(@user_board) || all_ships_sunk?(@computer_board)
+    until (all_ships_sunk?(@user_board) || all_ships_sunk?(@computer_board))
       Turn.new(@user_board, @computer_board, @computer_player).take_turn
     end
 
     end_game
-    puts "Game over. Would you like to (p)lay again or (q)uit?"
+    puts "Would you like to (p)lay again or (q)uit?"
     get_start_message_input
     Game.new.set_up_game
   end
 
   def get_start_message_input
-    puts "Enter p to play or q to quit:"
-    user_input = gets.chomp.to_s.upcase
-    if user_input == "Q"
-      abort('Coward')
+    puts "Would you like to (p)lay or (q)uit? You can also enter 'exit' at any time during the game to quit."
+    user_input = gets.chomp.to_s.strip.upcase
+    if user_input == "EXIT"
+      abort('Coward.')
+    elsif user_input == "Q"
+      abort('Coward.')
     elsif user_input == "P"
       return
     else
@@ -56,8 +58,10 @@ class Game
   end
 
   def get_board_size
-    board_size = Integer(gets) rescue false
-    if board_size == false
+    board_size = gets.chomp
+    if board_size.to_s.strip.upcase == "EXIT"
+      abort("Goodbye.")
+    elseif !board_size.is_a? Integer 
       puts "Invalid entry. Please enter a number."
       get_board_size
     elsif board_size < 4 || board_size > 26
@@ -217,8 +221,11 @@ class Game
 
   def validate_placement(ship)
     puts "Please choose #{ship.length} cells where you would like to place your #{ship.name}. For example, you can type 'A1, A2, etc.' separated by commas:"
-    user_coords = gets.chomp.gsub(/\s+/, "").split(",")
-    if @user_board.valid_placement?(ship, user_coords)
+    user_input = gets.chomp
+    user_coords = user_input.upcase.gsub(/\s+/, "").split(",")
+    if user_input.to_s.strip.upcase == "EXIT"
+      abort("Goodbye.")
+    elsif @user_board.valid_placement?(ship, user_coords)
       user_coords.each do |coord|
         @user_board.cells[coord].place_ship(ship)
       end
@@ -233,6 +240,15 @@ class Game
     end
   end
 
+  def initial_board_display #this is repeated in turn, but turn and game don't know about each other
+    puts "*** Here's your current board *** \n"
+    puts @user_board.render(true)
+    puts "------------------------------------"
+    puts "*** Here's my current board *** \n"
+    puts @computer_board.render
+    puts "------------------------------------"
+  end
+
   def all_ships_sunk?(board)
     board.ships.all? do |ship|
       ship.sunk?
@@ -240,23 +256,21 @@ class Game
   end
 
   def end_game
+    system('clear')
+    puts "*** Here's your final board *** \n"
+    puts @user_board.render(true)
+    puts "------------------------------------"
+    puts "*** Here's my final board *** \n"
+    puts @computer_board.render(true)
+    puts "------------------------------------"
     puts " "
-    if all_ships_sunk?(@user_board) && all_ships_sunk?(@computer_board)
+    if (all_ships_sunk?(@user_board) && all_ships_sunk?(@computer_board))
       puts "It's a tie! That will go well with your new suit."
     elsif all_ships_sunk?(@user_board)
       puts "The computer sunk all your ships! You're a loser!"
     elsif all_ships_sunk?(@computer_board)
       puts "You sunk all the computer's ships! You win!"
     end
-    puts "*** Player 1 final board *** \n"
-    puts @user_board.render(true)
-    puts "------------------------------------"
-    puts "*** Computer final board *** \n"
-    puts @computer_board.render(true)
-    puts "------------------------------------"
   end
 
 end
-
-game = Game.new
-game.game_start
