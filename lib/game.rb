@@ -25,13 +25,13 @@ class Game
     @computer_board = Board.new(board_size)
 
     @computer_player = ComputerBrain.new(@user_board, @computer_board)
-    @computer_player.cpu_place_ships(@computer_board.get_ships)
+    @computer_player.cpu_place_ships(@computer_board.ships)
 
     set_up_board
-
+    system('clear')
     puts "Ok, game on!"
 
-    until all_ships_sunk?(@user_board) || all_ships_sunk?(@computer_board)
+    until (all_ships_sunk?(@user_board) || all_ships_sunk?(@computer_board))
       Turn.new(@user_board, @computer_board, @computer_player).take_turn
     end
 
@@ -43,10 +43,10 @@ class Game
 
   def get_start_message_input
     puts "Enter p to play or q to quit:"
-    user_input = gets.chomp.to_s
-    if user_input == "q"
+    user_input = gets.chomp.to_s.strip.upcase
+    if user_input == "Q"
       abort('Goodbye.')
-    elsif user_input == "p"
+    elsif user_input == "P"
       return
     else
       puts "Sorry, what was your choice?"
@@ -87,7 +87,7 @@ class Game
 
   def validate_placement(ship)
     puts "Please choose #{ship.length} cells where you would like to place your #{ship.name}. For example, you can type 'A1, A2, etc.' separated by commas:"
-    user_coords = gets.chomp.gsub(/\s+/, "").split(",")
+    user_coords = gets.chomp.upcase.gsub(/\s+/, "").split(",")
     if @user_board.valid_placement?(ship, user_coords)
       user_coords.each do |coord|
         @user_board.cells[coord].place_ship(ship)
@@ -109,7 +109,7 @@ class Game
 
   def end_game
     puts " "
-    if all_ships_sunk(@user_board) && all_ships_sunk(@computer_board)
+    if (all_ships_sunk?(@user_board) && all_ships_sunk?(@computer_board))
       puts "We got a tie!"
     elsif all_ships_sunk?(@user_board)
       puts "I sunk all your ships! I win!"
@@ -126,5 +126,4 @@ class Game
 
 end
 
-game = Game.new
-game.game_start
+Game.new.game_start
