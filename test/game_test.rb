@@ -22,4 +22,7 @@ class ComputerBrainTest < Minitest::Test
     @game = Game.new
   end
 
+  def test_it_makes_custom_ships
+    make_custom_ships
+  end
 end
