@@ -23,6 +23,7 @@ class GameTest < Minitest::Test
   end
 
   def test_it_identifies_player_wins
+    skip 
     @computer_board.place(@submarine, ["B1", "B2"])
     @computer_board.place(@submarine2, ["C3", "C4"])
     @user_board.place(@submarine, ["A1", "A2"])
@@ -51,13 +52,13 @@ class GameTest < Minitest::Test
   end
 
   def test_it_identifies_computer_wins
+    skip
     @computer_board.place(@submarine, ["B1", "B2"])
     @computer_board.place(@submarine2, ["C3", "C4"])
     @user_board.place(@submarine, ["A1", "A2"])
     @user_board.place(@submarine2, ["D1", "D2"])
     assert_equal 2, @computer_board.ships.count
     assert_equal 2, @user_board.ships.count
-
 
     @computer_board.cells["A1"].fire_upon
     @user_board.cells["A1"].fire_upon

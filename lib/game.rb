@@ -109,7 +109,7 @@ class Game
     end
   end
 
-  def initial_board_display #this is repeated in turn, but turn and game don't know about each other
+  def initial_board_display #this is repeated in Turn, but turn and game don't know about each other
     puts "*** Here's your current board *** \n"
     puts @user_board.render(true)
     puts "------------------------------------"
