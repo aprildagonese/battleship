@@ -32,10 +32,6 @@ class Board
     ("A"..end_letter).to_a
   end
 
-  def get_ships
-    @ships
-  end
-
   def render(show_ship = false)
     render_array(show_ship).join.to_s
   end
