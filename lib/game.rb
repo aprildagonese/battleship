@@ -61,16 +61,13 @@ class Game
     board_size = gets.chomp
     if board_size.to_s.strip.upcase == "EXIT"
       abort("Goodbye.")
-    elseif !board_size.is_a? Integer 
-      puts "Invalid entry. Please enter a number."
-      get_board_size
-    elsif board_size < 4 || board_size > 26
+    elsif board_size.to_i < 4 || board_size.to_i > 26
       puts "Sorry, it needs to be a number between 4 and 26. Please try again."
       get_board_size
     else
       system('clear')
       puts "Ok, the game shall have #{board_size}x#{board_size} boards."
-      return board_size
+      return board_size.to_i
     end
   end
 
