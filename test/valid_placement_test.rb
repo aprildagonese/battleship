@@ -116,6 +116,4 @@ class ValidPlacementTest < Minitest::Test
     assert_equal true, @placement.valid_placement?(cruiser,["B1", "C1", "D1"])
   end
 
-
-
 end

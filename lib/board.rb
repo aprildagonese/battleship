@@ -73,21 +73,31 @@ class Board
     coordinates.each do |coordinate|
       cells[coordinate].place_ship(ship)
     end
+    @ships << ship
   end
 
   def valid_placement?(ship, coordinates)
-    placement = ValidPlacement.new
-    placement.valid_placement?(ship, coordinates) && overlapping_ships?(coordinates)
+    if all_coordinates_on_board?(coordinates)
+      ValidPlacement.new.valid_placement?(ship, coordinates) && overlapping_ships?(coordinates)
+    else
+      false
+    end
+  end
+
+  def all_coordinates_on_board?(coordinates)
+    coordinates.all? do |coord|
+      valid_coordinate?(coord)
+    end
+  end
+
+  def valid_coordinate?(coordinate)
+    cells.member?(coordinate)
   end
 
   def overlapping_ships?(coordinates)
     coordinates.all? do |coordinate|
       cells[coordinate].empty?
     end
-  end
-
-  def valid_coordinate?(coordinate)
-    cells.member?(coordinate)
   end
 
 end
