@@ -12,8 +12,10 @@ class Turn
     display_computer_board
     player_attacks
     @computer_brain.computer_attacks
+    puts "------------------------------------"
     player_outcome
     computer_outcome
+    puts "------------------------------------"
   end
 
   def display_user_board
@@ -29,8 +31,8 @@ class Turn
     puts "------------------------------------"
   end
 
-  def player_attacks
-    attack_coords = get_coords
+  def player_attacks(attack_coords = get_coords)
+    # attack_coords = get_coords
     if !@computer_board.valid_coordinate?(attack_coords)
       puts "Attack coordinate invalid. Please try again!"
       player_attacks
@@ -46,7 +48,7 @@ class Turn
 
   def get_coords
     p "What coordinates would you like to attack? For example, you can enter A1:"
-    gets.chomp().to_s
+    gets.chomp.upcase.gsub(/\s+/, "")
   end
 
   def player_outcome
