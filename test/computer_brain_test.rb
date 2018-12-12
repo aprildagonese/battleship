@@ -159,4 +159,42 @@ class ComputerBrainTest < Minitest::Test
     assert_equal ["B1", "A1", "C1", "B2", "B3", "A3", "C3", "B4"], @comp_brain2.attacked_keys
   end
 
+  def test_it_smarter_attacks
+    @battleship = Ship.new("Battelship", 5)
+    @user_board2.place(@submarine, ["B1", "B2"])
+    @user_board2.place(@submarine2, ["B3", "B4"])
+    @user_board2.place(@battleship, ["C8", "D8", "E8", "F8", "G8"])
+    #puts @user_board2.render(true)
+
+    @comp_brain2.computer_attacks("E8")
+    @comp_brain2.computer_attacks
+    assert_equal ["E8", "D8"], @comp_brain2.attacked_keys
+
+    @comp_brain2.computer_attacks
+    assert_equal ["E8", "D8", "C8"], @comp_brain2.attacked_keys
+
+    @comp_brain2.computer_attacks
+    assert_equal ["E8", "D8", "C8", "B8"], @comp_brain2.attacked_keys
+
+    @comp_brain2.computer_attacks
+    @comp_brain2.computer_attacks
+    assert_equal ["E8", "D8", "C8", "B8", "F8", "G8"], @comp_brain2.attacked_keys
+    puts @user_board2.render(true)
+  end
+  #   assert_equal "B1", @comp_brain2.find_last_hit
+  #
+  #
+  #   @comp_brain2.computer_attacks
+  #   assert_equal ["B1", "A1", "C1", "B2"], @comp_brain2.attacked_keys
+  #   #starts random generation after that sink, so forcing next attack below
+  #   @comp_brain2.computer_attacks("B3")
+  #   assert_equal ["B1", "A1", "C1", "B2", "B3"], @comp_brain2.attacked_keys
+  #   @comp_brain2.computer_attacks
+  #   assert_equal ["B1", "A1", "C1", "B2", "B3", "A3"], @comp_brain2.attacked_keys
+  #   @comp_brain2.computer_attacks
+  #   assert_equal ["B1", "A1", "C1", "B2", "B3", "A3", "C3"], @comp_brain2.attacked_keys
+  #   @comp_brain2.computer_attacks
+  #   assert_equal ["B1", "A1", "C1", "B2", "B3", "A3", "C3", "B4"], @comp_brain2.attacked_keys
+  # end
+
 end
