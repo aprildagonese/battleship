@@ -14,7 +14,7 @@ class Turn
     display_computer_board
     player_outcome
     computer_outcome
-    puts "------------------------------------"
+    puts "\n"
   end
 
   def display_user_board
@@ -72,11 +72,11 @@ class Turn
   def computer_outcome
     last_attack = @user_board.cells[@user_board.attacked_cells.last]
     if last_attack.render == "X"
-      puts "I sunk your #{last_attack.ship.name}!"
+      puts "The computer sunk your #{last_attack.ship.name}!"
     elsif last_attack.render == "H"
-        puts "I got a hit!"
+        puts "The computer got a hit!"
     elsif last_attack.render == "M"
-      puts "I missed!"
+      puts "The computer missed!"
     else
       puts "SOMETHING WENT WRONG HERE; CHECK COMPUTER OUTCOME"
     end

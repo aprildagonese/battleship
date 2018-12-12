@@ -8,7 +8,7 @@ class Board
     @width = size #width is for numbers
     @height = size #height is for letters
     @cells = cells_hash
-    @ships = get_ships
+    @ships = []
     @attacked_cells = []
   end
 
@@ -33,15 +33,7 @@ class Board
   end
 
   def get_ships
-    ship_count = 2
-    available_ships = [["Submarine", 2], ["Cruiser", 3], ["Battleship", 4]]
-    ships = []
-    counter = 0
-    while ships.count < ship_count
-      ships << Ship.new(available_ships[counter][0], available_ships[counter][1])
-      counter += 1
-    end
-    return ships
+    @ships
   end
 
   def render(show_ship = false)

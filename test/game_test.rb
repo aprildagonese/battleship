@@ -22,6 +22,11 @@ class GameTest < Minitest::Test
     @game = Game.new
   end
 
+
+  def test_it_makes_custom_ships
+    make_custom_ships
+  end
+
   def test_it_identifies_player_wins
     @computer_board.place(@submarine, ["B1", "B2"])
     @computer_board.place(@submarine2, ["C3", "C4"])
