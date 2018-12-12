@@ -19,15 +19,16 @@ class Game
 
   def set_up_game
     system('clear')
-    puts "The sides of our boards can be anywhere from 4 cells to 26 cells wide. Please enter a number between 4 and 26 to tell me how big our boards should be."
+    puts "Please enter the board size on which you wish to play. The sides of the boards can be anywhere from 4 cells to 26 cells."
     board_size = get_board_size
     @user_board = Board.new(board_size)
     @computer_board = Board.new(board_size)
 
     @computer_player = ComputerBrain.new(@user_board, @computer_board)
-    @computer_player.cpu_place_ships(@computer_board.get_ships)
 
     set_up_board
+
+    @computer_player.cpu_place_ships(@computer_board.get_ships)
 
     puts "Ok, game on!"
 
@@ -55,8 +56,11 @@ class Game
   end
 
   def get_board_size
-    board_size = gets.chomp.to_i
-    if board_size < 4 || board_size > 26
+    board_size = Integer(gets) rescue false
+    if board_size == false
+      puts "Invalid entry. Please enter a number."
+      get_board_size
+    elsif board_size < 4 || board_size > 26
       puts "Sorry, it needs to be a number between 4 and 26. Please try again."
       get_board_size
     else
@@ -67,33 +71,43 @@ class Game
   end
 
   def set_up_board
-    ships_message
+    puts "You must first place your ships:"
+    puts @user_board.render(true)
+    puts "\n"
+
+    ships = default_or_custom_ships
+    @user_board.ships = ships
+    @computer_board.ships = ships
+
+    system('clear')
+    puts "Ok. The game shall be played with the following #{@user_board.ships.count} ships: "
+    @user_board.ships.each do |ship|
+      puts "#{ship.name} (#{ship.length})"
+    end
+    puts "\n"
+
+    puts @user_board.render(true)
+    puts "\n"
     @user_board.ships.each do |ship|
       validate_placement(ship)
     end
   end
 
-  def ships_message
-    puts "You must first place your ships:"
-    puts @user_board.render(true)
-    puts "\n"
-
+  def default_or_custom_ships
     puts "Would you like to make your own ships? (Y/N)"
     user_input = gets.chomp.to_s.upcase
     if user_input == "Y"
       return make_custom_ships
 
     elsif user_input == "N"
-      puts "You have the following ships to play with:"
       ships = get_default_ships
       ships.each do |ship|
         puts "#{ship.name}, #{ship.length} cells long"
       end
-      puts "-------------------------"
       return ships
     else
       puts "Invalid selection. Try again"
-      ships_message
+      default_or_custom_ships
     end
   end
 
@@ -101,7 +115,7 @@ class Game
     system('clear')
     puts @user_board.render(true)
     puts "\n"
-    max_total = @user_board.width^2 / 3
+    max_total = (@user_board.width * @user_board.width) / 3
     puts "You have chosen to make custom ships. Each ship will need a name, followed
     by a length (e.g. Destroyer, 3). You can only make straight ships. Also,
     because ships need room to move, your combined length of all ships cannot
@@ -111,15 +125,16 @@ class Game
     ship_count = 1
     ship_total = get_valid_custom_ship_number(max_total)
     length_total = 0
+    custom_ships = []
     until ship_count > ship_total
       name = get_custom_ship_name(ship_count, ship_total)
       length = get_valid_ship_length(name, ship_count, max_total, length_total, ship_total)
-      ship = [name, length]
+      ship = Ship.new(name, length)
       custom_ships << ship
       ship_count += 1
       length_total += length
     end
-    @ships = custom_ships
+    return custom_ships
   end
 
   def get_valid_custom_ship_number(max_total)
@@ -127,15 +142,12 @@ class Game
     user_input = Integer(gets) rescue false
     if user_input == false
       puts "Invalid entry. Number of ships must be a number greater than 2 and
-      less than #{max_total / 3}."
-      get_valid_custom_ship_number
-    else
-      user_input
-    end
-    if user_input < 2 || user_input > (max_total / 3)
+      less than or equal to #{max_total / 2}."
+      get_valid_custom_ship_number(max_total)
+    elsif user_input < 2 || user_input > (max_total / 2)
       puts "Invalid entry. Number of ships must be greater than 2 and less than
-      #{max_total / 3}."
-      get_valid_custom_ship_number
+      or equal to #{max_total / 2}."
+      get_valid_custom_ship_number (max_total)
     else
       return user_input
     end
@@ -147,21 +159,22 @@ class Game
   end
 
   def get_valid_ship_length(name, ship_count, max_total, length_total, ship_total)
-    puts "Please enter a length for #{name}. (#{ship_total - ship_count} ships remaining)"
+    puts "Please enter a length for #{name}. (#{ship_total - ship_count} more ships remaining)"
     user_input = Integer(gets) rescue false
     if user_input == false
       puts "Invalid entry. Ship length must be a number."
-      get_valid_custom_ship_number
+      get_valid_ship_length(name, ship_count, max_total, length_total, ship_total)
     elsif user_input < 2 || user_input > @user_board.width
-      puts "Invalid entry. Ship length must be at least 2 and no more than #{user_board.wdith}."
-      get_valid_custom_ship_number
+      puts "Invalid entry. Ship length must be at least 2 and no more than #{@user_board.width}."
+      get_valid_ship_length(name, ship_count, max_total, length_total, ship_total)
     else
       length = user_input
       remaining_length = max_total - length_total
-      saving_length = (ship_total - ship_count - 1) * 2
+      saving_length = (ship_total - ship_count) * 2
       if length > remaining_length - saving_length
         puts "Invalid length. Will not leave enough spots for your remaining ships.
         Please re-enter a shorter length for ship #{ship_count} out of #{ship_total}."
+        get_valid_ship_length(name, ship_count, max_total, length_total, ship_total)
       else
         return length
       end
@@ -193,11 +206,10 @@ class Game
 
     default_ships = []
     counter = 0
-    while default_ships.count < ship_count
+    until default_ships.count == ship_count
       default_ships << Ship.new(classic_ships[counter][0], classic_ships[counter][1])
       counter += 1
     end
-    @ships = default_ships
     return default_ships
   end
 
@@ -211,8 +223,10 @@ class Game
         @user_board.cells[coord].place_ship(ship)
       end
       system('clear')
-      puts "Great! Your #{ship.name} is now on cells #{user_coords}."
+      puts "Great! Your #{ship.name} is now on cells #{user_coords}:"
+      puts "\n"
       puts @user_board.render(true)
+      puts "\n"
     else
       puts "Sorry, those cells don't work. Try again."
       validate_placement(ship)
@@ -227,18 +241,18 @@ class Game
 
   def end_game
     puts " "
-    if all_ships_sunk(@user_board) && all_ships_sunk(@computer_board)
-      puts "We got a tie!"
+    if all_ships_sunk?(@user_board) && all_ships_sunk?(@computer_board)
+      puts "It's a tie! That will go well with your new suit."
     elsif all_ships_sunk?(@user_board)
-      puts "I sunk all your ships! I win!"
+      puts "The computer sunk all your ships! You're a loser!"
     elsif all_ships_sunk?(@computer_board)
-      puts "You sunk all my ships! You win!"
+      puts "You sunk all the computer's ships! You win!"
     end
-    puts "*** Here's your final board *** \n"
+    puts "*** Player 1 final board *** \n"
     puts @user_board.render(true)
     puts "------------------------------------"
-    puts "*** Here's my final board *** \n"
-    puts @computer_board.render
+    puts "*** Computer final board *** \n"
+    puts @computer_board.render(true)
     puts "------------------------------------"
   end
 
