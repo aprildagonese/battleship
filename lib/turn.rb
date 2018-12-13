@@ -18,14 +18,14 @@ class Turn
   end
 
   def display_user_board
-    puts "*** Here's your current board *** \n"
+    puts "*** Player's current board *** \n"
     puts @user_board.render(true)
     puts "------------------------------------"
 
   end
 
   def display_computer_board
-    puts "*** Here's my current board *** \n"
+    puts "*** Computer's current board *** \n"
     puts @computer_board.render
     puts "------------------------------------"
   end
@@ -59,7 +59,7 @@ class Turn
   def player_outcome
     last_attack = @computer_board.cells[@computer_board.attacked_cells.last]
     if last_attack.render == "X"
-      puts "You sank my #{last_attack.ship.name}!"
+      puts "You sank the computer's #{last_attack.ship.name}!"
     elsif last_attack.render == "H"
         puts "You got a hit!"
     elsif last_attack.render == "M"

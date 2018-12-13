@@ -1,6 +1,3 @@
-# require 'pry'
-# require './lib/ship'
-
 class ValidPlacement
 
   def initialize
@@ -18,7 +15,7 @@ class ValidPlacement
 
   def split_numbers(coordinates)
     coordinates.map do |coordinate|
-      coordinate[1].to_i
+      [coordinate[1], coordinate[2]].join.to_i
     end
   end
 

@@ -3,7 +3,6 @@ require 'minitest/pride'
 require './lib/ship'
 require './lib/cell'
 require './lib/board'
-require 'pry'
 
 class BoardTest < Minitest::Test
 
@@ -37,14 +36,14 @@ class BoardTest < Minitest::Test
     assert_equal false, @board.valid_coordinate?("A22")
   end
 
-  # def test_valid_coordinate_custom_board
-  #   board2 = Board.new(6, 7)
-  #   assert_equal true, board2.valid_coordinate?("A1")
-  #   assert_equal true, board2.valid_coordinate?("E5")
-  #   assert_equal false, board2.valid_coordinate?("L2")
-  #   assert_equal false, board2.valid_coordinate?("E8")
-  #   assert_equal false, board2.valid_coordinate?("Z77")
-  # end
+  def test_valid_coordinate_custom_board
+    board2 = Board.new(7)
+    assert_equal true, board2.valid_coordinate?("A1")
+    assert_equal true, board2.valid_coordinate?("E5")
+    assert_equal false, board2.valid_coordinate?("L2")
+    assert_equal false, board2.valid_coordinate?("E8")
+    assert_equal false, board2.valid_coordinate?("Z77")
+  end
 
   def test_invalid_placement_coords_not_on_board
     assert_equal false, @board.valid_placement?(@cruiser,["Z1", "Z2"])
@@ -109,23 +108,6 @@ class BoardTest < Minitest::Test
     hit_cell = @board.cells["C4"]
     hit_cell.fire_upon
     assert_equal "  1 2 3 4 \nA S S S . \nB . . M X \nC . . . X \nD . . . . \n", @board.render(true)
-
-    puts "\n"
-    board2 = Board.new(26)
-    board2.place(@cruiser, ["A1", "A2", "A3"])
-    board2.place(@submarine, ["B18", "C18"])
-    @battelship = Ship.new("Battle Ship", 6)
-    board2.place(@battelship, ["E7", "E2", "E3", "E4", "E5", "E6"])
-    hit_cell = board2.cells["B18"]
-    hit_cell.fire_upon
-    miss_cell = board2.cells["B3"]
-    miss_cell.fire_upon
-    hit_cell = board2.cells["C18"]
-    hit_cell.fire_upon
-    hit_cell2 = board2.cells["E7"]
-    hit_cell2.fire_upon
-    puts @submarine.health
-
   end
 
   def test_it_knows_coordinates_are_on_board

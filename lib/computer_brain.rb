@@ -1,5 +1,3 @@
-require 'pry'
-
 class ComputerBrain
   attr_accessor :attacked_keys, :available_keys, :validated_keys
 
@@ -60,7 +58,7 @@ class ComputerBrain
 
   def directional_validation(coordinate, direction, ship)
     letter = coordinate.split("")[0]
-    number = coordinate.split("")[1].to_i
+    number = [coordinate.split("")[1], coordinate.split("")[2]].join.to_i
 
     if direction == :vertical
       potential_keys = vertical_directional_keys(letter, number, ship)
@@ -118,9 +116,7 @@ class ComputerBrain
     if @attacked_keys.empty? || last_key == nil || @user_board.cells[last_key].render == "X"
       generate_random_attack_key
     elsif @user_board.cells[last_key].render == "H"
-      last_letter = last_key.split("")[0].ord
-      last_number = last_key.split("")[1].to_i
-      move_up(last_letter, last_number)
+      move_up(split_last_key_letter(last_key), split_last_key_number(last_key))
     end
   end
 
@@ -130,18 +126,17 @@ class ComputerBrain
       generate_random_attack_key
     elsif @user_board.cells[last_four_shots_array[0]].render == "M" && shot_was_a_hit?(1) && shot_was_a_hit?(2) && shot_was_a_hit?(3)
       last_key = last_four_shots_array[3]
-      last_letter = last_key.split("")[0].ord
-      last_number = last_key.split("")[1].to_i
-      reverse_direction(last_letter, last_number)
+      reverse_direction(split_last_key_letter(last_key), split_last_key_number(last_key))
     elsif @user_board.cells[last_four_shots_array[0]].render == "M" && shot_was_a_hit?(1) && shot_was_a_hit?(2)
       last_key = last_four_shots_array[2]
-      last_letter = last_key.split("")[0].ord
-      last_number = last_key.split("")[1].to_i
-      reverse_direction(last_letter, last_number)
+      reverse_direction(split_last_key_letter(last_key), split_last_key_number(last_key))
+      #try to fix later
+    # elsif last_four_shots_array[1] && last_four_shots_array[2] &&
+    #       (@user_board.cells[last_four_shots_array[1]].render == "M" && shot_was_a_hit?(0) && shot_was_a_hit?(2)) ||
+    #       (@user_board.cells[last_four_shots_array[1]].render == "M" && @user_board.cells[last_four_shots_array[2]].render == "M" && shot_was_a_hit?(0) && shot_was_a_hit?(3))
+    #   keep_direction(split_last_key_letter(last_key), split_last_key_number(last_key))
     else
-      last_letter = last_key.split("")[0].ord
-      last_number = last_key.split("")[1].to_i
-      move_up(last_letter, last_number)
+      move_up(split_last_key_letter(last_key), split_last_key_number(last_key))
     end
   end
 
@@ -154,6 +149,14 @@ class ComputerBrain
 
   def last_four_shots_array
     @attacked_keys.reverse[0..3]
+  end
+
+  def split_last_key_letter(key)
+    key.split("")[0].ord
+  end
+
+  def split_last_key_number(key)
+    [key.split("")[1], key.split("")[2]].join.to_i
   end
 
   def shot_was_a_hit?(index)
@@ -182,7 +185,17 @@ class ComputerBrain
     end
   end
 
-
+  def keep_direction(last_letter, last_number)
+    if last_shot_direction == :down
+      move_down(last_letter, last_number)
+    elsif last_shot_direction == :up
+      move_up(last_letter, last_number)
+    elsif last_shot_direction == :right
+      move_right(last_letter, last_number)
+    elsif last_shot_direction == :left
+      move_left(last_letter, last_number)
+    end
+  end
 
   def generate_random_attack_key
     key_index = rand(@available_keys.size) - 1
@@ -250,15 +263,3 @@ class ComputerBrain
   end
 
 end
-
-
-#
-# user_board = Board.new
-# comp_brain = ComputerBrain.new(user_board)
-# @user_board.place(@cruiser, ["B1", "B2", "B3"])
-# # rand_attack_key = comp_brain.generate_random_attack_key
-# # p rand_attack_key
-# comp_brain.computer_attacks("B2")
-# smart_key = comp_brain.generate_smart_attack_key
-# #smart_key
-# comp_brain.computer_attacks(smart_key)

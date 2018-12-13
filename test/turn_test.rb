@@ -5,7 +5,6 @@ require './lib/cell'
 require './lib/board'
 require './lib/valid_placement'
 require './lib/turn'
-require 'pry'
 
 class TurnTest < Minitest::Test
 

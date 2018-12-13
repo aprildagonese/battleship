@@ -4,7 +4,6 @@ require './lib/ship'
 require './lib/cell'
 require './lib/board'
 require './lib/valid_placement'
-require 'pry'
 
 class ValidPlacementTest < Minitest::Test
 
@@ -30,8 +29,8 @@ class ValidPlacementTest < Minitest::Test
   end
 
   def test_split_numbers
-    test_array = ["A3", "A1", "A2", "A4"]
-    assert_equal [3, 1, 2, 4], @placement.split_numbers(test_array)
+    test_array = ["A3", "A1", "A2", "A4", "A15"]
+    assert_equal [3, 1, 2, 4, 15], @placement.split_numbers(test_array)
   end
 
   def test_matching_letters

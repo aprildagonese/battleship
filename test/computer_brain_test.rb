@@ -6,7 +6,6 @@ require './lib/board'
 require './lib/valid_placement'
 require './lib/turn'
 require './lib/computer_brain'
-require 'pry'
 
 class ComputerBrainTest < Minitest::Test
 
@@ -18,8 +17,6 @@ class ComputerBrainTest < Minitest::Test
     @cruiser = Ship.new("Cruiser", 3)
     @submarine = Ship.new("Submarine", 2)
     @submarine2 = Ship.new("Submarine", 2)
-
-    #@turn1 = Turn.new(@user_board, @computer_board)
     @comp_brain = ComputerBrain.new(@user_board, @computer_board)
     @comp_brain2 = ComputerBrain.new(@user_board2, @computer_board2)
   end
@@ -29,11 +26,6 @@ class ComputerBrainTest < Minitest::Test
   end
 
   ##Computer ship placement test methods
-
-  # def test_computer_knows_its_ships
-  #   assert_equal [@cruiser, @submarine], @comp_brain.ships
-  # end
-
   def test_it_has_limited_initial_placement_array
     ship = @cruiser
     ship2 = @submarine
@@ -45,8 +37,6 @@ class ComputerBrainTest < Minitest::Test
   end
 
   def test_it_can_make_potential_keys_in_a_direction
-    # @computer_board.place(@submarine, ["C3", "D3"])
-    # @comp_brain.validated_keys = ["C3", "D3"]
     ship = @cruiser
     ship2 = @submarine
 
@@ -86,8 +76,8 @@ class ComputerBrainTest < Minitest::Test
     @cruiser3 = Ship.new("cruiser", 3)
     ships = [@submarine, @cruiser, @destroyer, @battleship, @cruiser2, @cruiser3, @battleship2, @battleship3]
     @comp_brain2.cpu_place_ships(ships)
-
-    puts @computer_board2.render(true)
+    #Un-comment line below ot visualize ships being placed
+    #puts @computer_board2.render(true)
   end
 
   ##Computer attack method tests
@@ -134,7 +124,6 @@ class ComputerBrainTest < Minitest::Test
     @user_board2.place(@submarine, ["B1", "B2"])
     @user_board2.place(@submarine2, ["B3", "B4"])
     @user_board2.place(@cruiser, ["D3", "E3", "F3"])
-    #puts @user_board2.render(true)
 
     @comp_brain2.computer_attacks("B1")
     @comp_brain2.computer_attacks
@@ -144,7 +133,6 @@ class ComputerBrainTest < Minitest::Test
     assert_equal ["B1", "A1", "C1"], @comp_brain2.attacked_keys
 
     assert_equal "B1", @comp_brain2.find_last_hit
-
 
     @comp_brain2.computer_attacks
     assert_equal ["B1", "A1", "C1", "B2"], @comp_brain2.attacked_keys
@@ -164,7 +152,6 @@ class ComputerBrainTest < Minitest::Test
     @user_board2.place(@submarine, ["B1", "B2"])
     @user_board2.place(@submarine2, ["B3", "B4"])
     @user_board2.place(@battleship, ["C8", "D8", "E8", "F8", "G8"])
-    #puts @user_board2.render(true)
 
     @comp_brain2.computer_attacks("E8")
     @comp_brain2.computer_attacks
@@ -179,22 +166,9 @@ class ComputerBrainTest < Minitest::Test
     @comp_brain2.computer_attacks
     @comp_brain2.computer_attacks
     assert_equal ["E8", "D8", "C8", "B8", "F8", "G8"], @comp_brain2.attacked_keys
-    puts @user_board2.render(true)
+
+    #un-comment below line to visualize attacks
+    #puts @user_board2.render(true)
   end
-  #   assert_equal "B1", @comp_brain2.find_last_hit
-  #
-  #
-  #   @comp_brain2.computer_attacks
-  #   assert_equal ["B1", "A1", "C1", "B2"], @comp_brain2.attacked_keys
-  #   #starts random generation after that sink, so forcing next attack below
-  #   @comp_brain2.computer_attacks("B3")
-  #   assert_equal ["B1", "A1", "C1", "B2", "B3"], @comp_brain2.attacked_keys
-  #   @comp_brain2.computer_attacks
-  #   assert_equal ["B1", "A1", "C1", "B2", "B3", "A3"], @comp_brain2.attacked_keys
-  #   @comp_brain2.computer_attacks
-  #   assert_equal ["B1", "A1", "C1", "B2", "B3", "A3", "C3"], @comp_brain2.attacked_keys
-  #   @comp_brain2.computer_attacks
-  #   assert_equal ["B1", "A1", "C1", "B2", "B3", "A3", "C3", "B4"], @comp_brain2.attacked_keys
-  # end
 
 end

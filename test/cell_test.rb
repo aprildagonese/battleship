@@ -5,7 +5,7 @@ require './lib/cell'
 
 class CellTest < Minitest::Test
 
-  def test_cell_exists
+  def test_it_exists
     cell = Cell.new("B4")
     assert_instance_of Cell, cell
   end
@@ -17,7 +17,7 @@ class CellTest < Minitest::Test
 
   def test_cell_ship_initial
     cell = Cell.new("B4")
-    assert_equal nil, cell.ship
+    assert_nil cell.ship
   end
 
   def test_cell_empty
