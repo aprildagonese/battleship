@@ -1,9 +1,13 @@
 require './lib/ship'
 
 class ShipCreator
+  attr_reader :cpu_ships,
+              :user_ships
 
   def initialize(user_board)
     @user_board = user_board
+    @cpu_ships = []
+    @user_ships = []
   end
 
   def default_or_custom_ships
@@ -42,8 +46,11 @@ class ShipCreator
     until ship_count > ship_total
       name = get_custom_ship_name(ship_count, ship_total)
       length = get_valid_ship_length(name, ship_count, max_total, length_total, ship_total)
-      ship = Ship.new(name, length)
-      custom_ships << ship
+      user_ship = Ship.new(name, length)
+      cpu_ship = Ship.new(name, length)
+      @user_ships << user_ship
+      @cpu_ships << cpu_ship
+      custom_ships << user_ship
       ship_count += 1
       length_total += length
     end
@@ -120,7 +127,10 @@ class ShipCreator
     default_ships = []
     counter = 0
     until default_ships.count == ship_count
-      default_ships << Ship.new(classic_ships[counter][0], classic_ships[counter][1])
+      user_ship = Ship.new(classic_ships[counter][0], classic_ships[counter][1])
+      @cpu_ships << Ship.new(classic_ships[counter][0], classic_ships[counter][1])
+      @user_ships << user_ship
+      default_ships << user_ship
       counter += 1
     end
     return default_ships

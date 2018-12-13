@@ -13,6 +13,7 @@ class Game
   end
 
   def game_start
+    system('clear')
     puts "Welcome to BATTLESHIP"
     get_start_message_input
     set_up_game
@@ -78,10 +79,10 @@ class Game
     puts "\n"
 
 
-    choose_ships = ShipCreator.new(@user_board)
-    ships = choose_ships.default_or_custom_ships
-    @user_board.ships = ships
-    @computer_board.ships = ships
+    game_ships = ShipCreator.new(@user_board)
+    game_ships.default_or_custom_ships
+    @user_board.ships = game_ships.user_ships
+    @computer_board.ships = game_ships.cpu_ships
 
     system('clear')
     puts "Ok. The game shall be played with the following #{@user_board.ships.count} ships: "
@@ -119,12 +120,13 @@ class Game
   end
 
   def initial_board_display #this is repeated in turn, but turn and game don't know about each other
-    puts "*** Here's your current board *** \n"
+    puts "*** Player current board *** \n"
     puts @user_board.render(true)
     puts "------------------------------------"
-    puts "*** Here's my current board *** \n"
+    puts "*** Computer current board *** \n"
     puts @computer_board.render
     puts "------------------------------------"
+    puts "\n"
   end
 
   def all_ships_sunk?(board)
@@ -135,10 +137,10 @@ class Game
 
   def end_game
     system('clear')
-    puts "*** Here's your final board *** \n"
+    puts "*** Player's final board *** \n"
     puts @user_board.render(true)
     puts "------------------------------------"
-    puts "*** Here's my final board *** \n"
+    puts "*** Computer's final board *** \n"
     puts @computer_board.render(true)
     puts "------------------------------------"
     puts " "
