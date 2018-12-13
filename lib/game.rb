@@ -39,7 +39,6 @@ class Game
     end
 
     end_game
-    puts "Would you like to (p)lay again or (q)uit?"
     get_start_message_input
     Game.new.set_up_game
   end

@@ -12,8 +12,11 @@ class ShipCreator
 
   def default_or_custom_ships
     puts "Would you like to make your own ships? (Y/N)"
-    user_input = gets.chomp.to_s.upcase
-    if user_input == "Y"
+    user_input = gets.chomp.strip.to_s.upcase
+    if user_input == "EXIT"
+      abort('Coward.')
+
+    elsif user_input == "Y"
       return make_custom_ships
 
     elsif user_input == "N"
@@ -75,7 +78,12 @@ class ShipCreator
 
   def get_custom_ship_name(ship_count, ship_total)
     puts "Please enter a name for ship #{ship_count} out of #{ship_total}."
-    gets.chomp
+    name = gets.chomp
+    if name.strip.upcase == "EXIT"
+      abort('Coward.')
+    else
+      return name
+    end
   end
 
   def get_valid_ship_length(name, ship_count, max_total, length_total, ship_total)
